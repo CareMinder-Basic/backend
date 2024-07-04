@@ -56,6 +56,9 @@ jobs:
       - name: docker stop container
         run: sudo docker stop $(sudo docker ps -q) 2>/dev/null || true
 
+      - name: Remove existing container
+        run: sudo docker rm github-actions-demo || true
+
       # 3. 최신 이미지를 컨테이너화하여 실행시킵니다
       - name: docker run new container
         run: sudo docker run --name github-actions-demo --rm -d -p 8080:8080 ${{ secrets.DOCKERHUB_USERNAME }}/github-actions-demo
