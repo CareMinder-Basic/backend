@@ -1,16 +1,12 @@
-# Dockerfile
-
-# jdk17 Image Start
+# Use the official OpenJDK 17 image from the Docker Hub
 FROM openjdk:17-jdk-alpine
 
-# 인자 설정 - JAR_File
-ARG JAR_FILE=build/libs/*.jar
+# Create a volume directory
+VOLUME /tmp
 
-# jar 파일 복제
+# Copy the jar file into the container
+ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 
-# 인자 설정 부분과 jar 파일 복제 부분 합쳐서 진행해도 무방
-#COPY build/libs/*.jar app.jar
-
-# 실행 명령어
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Run the jar file
+ENTRYPOINT ["java", "-jar", "/app.jar"]
