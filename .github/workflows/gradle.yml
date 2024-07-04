@@ -25,6 +25,8 @@ jobs:
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: clean bootJar
+    - name: Create application.yml as environment variable
+      run: echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
 
     # 3. Docker 이미지 빌드
     - name: docker image build
