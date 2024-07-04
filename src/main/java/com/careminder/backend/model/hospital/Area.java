@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class Area {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     /** 구역의 이름 */
     private String name;

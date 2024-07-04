@@ -9,7 +9,7 @@ public class PatientRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private RequestStatus status;

@@ -9,12 +9,15 @@ import jakarta.persistence.Id;
 public class Ward {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     /** 병동의 이름 */
-    private String name;
-    private String role;
+    private String wardName;
+    private Role role;
     private String loginId;
     private String password;
-    private String phoneNumber;
+    private String managerName;
+    private String managerPhoneNumber;
+    private String managerEmail;
+
 }
