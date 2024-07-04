@@ -1,14 +1,13 @@
 package com.careminder.backend.model.account;
 
-public enum StaffRole {
-    NURSE("Nurse"),
-    ASSISTANT_NURSE("Assistant Nurse"),
-    DOCTOR("Doctor"),
-    WORKER("Worker");
+public enum Role {
+    ADMIN("Admin"),
+    WARD("Assistant Nurse"),
+    STAFF("Staff");
 
     private final String displayName;
 
-    StaffRole(String displayName) {
+    Role(String displayName) {
         this.displayName = displayName;
     }
 
