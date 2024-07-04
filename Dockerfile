@@ -1,5 +1,5 @@
-# Use the official OpenJDK 17 image from the Docker Hub
-FROM openjdk:17-jdk-alpine
+# Use the official OpenJDK 21 image from the Docker Hub
+FROM openjdk:21-jdk-alpine
 
 # Create a volume directory
 VOLUME /tmp
