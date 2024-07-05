@@ -10,7 +10,7 @@ public class Staff {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     /** 직원의 이름 */
     private String name;
@@ -20,5 +20,5 @@ public class Staff {
     private String email;
     private String nfc;
     private String fingerprint;
-    private Role role;
+    private StaffRole role;
 }

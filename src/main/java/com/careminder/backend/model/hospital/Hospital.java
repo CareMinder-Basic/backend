@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 public class Hospital {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     /** 병원의 이름 */
     private String name;
