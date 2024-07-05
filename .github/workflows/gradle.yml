@@ -19,19 +19,19 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
+        
+    # 2.1 application.yml 파일 생성
+    - name: Create application.yml file
+      run: touch ./src/main/resources/application.yml
+
+    - name: Populate application.yml with secret
+      run: echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
 
     # 2. Spring Boot 애플리케이션 빌드
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: clean bootJar
-        
-    # 2.1 application.yml 파일 생성
-    - name: Create application.yml file
-      run: touch src/main/resources/application.yml
-
-    - name: Populate application.yml with secret
-      run: echo "${{ secrets.APPLICATION_YML }}" > src/main/resources/application.yml
 
     # 3. Docker 이미지 빌드
     - name: docker image build
