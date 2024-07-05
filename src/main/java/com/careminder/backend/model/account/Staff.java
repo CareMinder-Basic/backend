@@ -1,9 +1,6 @@
 package com.careminder.backend.model.account;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Staff {
@@ -14,11 +11,14 @@ public class Staff {
 
     /** 직원의 이름 */
     private String name;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private String loginId;
     private String password;
     private String phoneNumber;
     private String email;
     private String nfc;
     private String fingerprint;
-    private StaffRole role;
+    @Enumerated(EnumType.STRING)
+    private StaffRole staffRole;
 }
