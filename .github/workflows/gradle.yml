@@ -21,6 +21,9 @@ jobs:
         distribution: 'temurin'
         
     # 2.1 application.yml 파일 생성
+    - name: Create resources directory
+      run: mkdir -p src/main/resources
+    
     - name: Create application.yml file
       run: touch ./src/main/resources/application.yml
 
