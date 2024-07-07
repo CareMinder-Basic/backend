@@ -13,7 +13,7 @@ public class Admin {
     private String name;
     @Enumerated(EnumType.STRING)
     private Role role;
-    private String username;
+    private String loginId;
     private String password;
     private String phoneNumber;
     private String email;
