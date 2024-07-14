@@ -2,6 +2,7 @@ package com.careminder.backend.implement.account;
 
 import com.careminder.backend.dto.account.StaffLoginRequest;
 import com.careminder.backend.dto.account.StaffSignUpRequest;
+import com.careminder.backend.global.annotation.Implement;
 import com.careminder.backend.global.auth.JWTUtil;
 import com.careminder.backend.global.error.exception.InvalidCredentialsException;
 import com.careminder.backend.global.response.JWTResponse;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.careminder.backend.global.constant.AuthExceptionConstant.PASSWORD_ERROR;
 
+@Implement
 public class StaffAuthManager {
 
     private final StaffRepository staffRepository;
