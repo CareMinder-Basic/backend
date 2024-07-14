@@ -1,4 +1,4 @@
-package com.careminder.backend.global.constant;
+package com.careminder.backend.global.constant.exception;
 
 public enum AuthExceptionConstant {
 

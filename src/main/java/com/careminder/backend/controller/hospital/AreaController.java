@@ -18,7 +18,7 @@ public class AreaController {
     }
 
     @PostMapping
-    public AreaIdResponse create(@RequestBody AreaCreateRequest areaCreateRequest){
+    public AreaIdResponse create(@RequestBody final AreaCreateRequest areaCreateRequest){
         return areaService.createArea(areaCreateRequest);
     }
 }

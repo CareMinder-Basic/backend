@@ -17,7 +17,7 @@ public class WardAuthController {
 
     private final WardAuthService wardAuthService;
 
-    public WardAuthController(WardAuthService wardAuthService) {
+    public WardAuthController(final WardAuthService wardAuthService) {
         this.wardAuthService = wardAuthService;
     }
 

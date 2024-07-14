@@ -27,7 +27,6 @@ public class StaffAuthService {
     }
 
     public void signUp(final StaffSignUpRequest staffSignUpRequest){
-        // db 저장
         staffAuthManager.signUp(staffSignUpRequest);
     }
 }

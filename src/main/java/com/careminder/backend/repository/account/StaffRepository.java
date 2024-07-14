@@ -1,9 +1,26 @@
 package com.careminder.backend.repository.account;
 
+import com.careminder.backend.global.error.exception.NotFoundException;
 import com.careminder.backend.model.account.Staff;
-import com.careminder.backend.model.account.Ward;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface StaffRepository extends JpaRepository<Staff, Long> {
-    Staff findByLoginId(String LoginId);
+import static com.careminder.backend.global.constant.exception.StaffExceptionConstant.STAFF_NOT_FOUND_ERROR;
+
+@Repository
+public class StaffRepository {
+
+    private final StaffJpaRepository staffJpaRepository;
+
+    public StaffRepository(final StaffJpaRepository staffJpaRepository) {
+        this.staffJpaRepository = staffJpaRepository;
+    }
+
+    public void save(final Staff staff){
+        staffJpaRepository.save(staff);
+    }
+
+    public Staff getByLoginId(final String loginId){
+        return staffJpaRepository.findByLoginId(loginId).orElseThrow(
+                () -> new NotFoundException(STAFF_NOT_FOUND_ERROR.message()));
+    }
 }

@@ -6,12 +6,13 @@ import com.careminder.backend.global.annotation.Implement;
 import com.careminder.backend.global.auth.JWTUtil;
 import com.careminder.backend.global.error.exception.InvalidCredentialsException;
 import com.careminder.backend.global.response.JWTResponse;
+import com.careminder.backend.model.account.Role;
 import com.careminder.backend.model.account.Ward;
 import com.careminder.backend.repository.account.WardRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.careminder.backend.global.constant.AuthExceptionConstant.PASSWORD_ERROR;
+import static com.careminder.backend.global.constant.exception.AuthExceptionConstant.PASSWORD_ERROR;
 
 @Implement
 public class WardAuthManager {
@@ -31,7 +32,7 @@ public class WardAuthManager {
         if(!passwordEncoder.matches(wardLoginRequest.password(),ward.getPassword())){
             throw new InvalidCredentialsException(PASSWORD_ERROR.message());
         }
-        return jwtUtil.createJWT(ward.getId());
+        return jwtUtil.createJWT(ward.getId(), Role.WARD);
     }
 
     public void logout(){
