@@ -6,10 +6,7 @@ import com.careminder.backend.global.response.JWTResponse;
 import com.careminder.backend.service.account.WardAuthService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/ward")
 @RestController
@@ -19,6 +16,11 @@ public class WardAuthController {
 
     public WardAuthController(final WardAuthService wardAuthService) {
         this.wardAuthService = wardAuthService;
+    }
+
+    @GetMapping("/list")
+    public String wardList(){
+        return "요청 성공";
     }
 
     @PostMapping("/login")

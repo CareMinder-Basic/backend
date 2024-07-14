@@ -93,7 +93,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/api/ward/login", "/api/ward/sign-up","/swagger-ui/**",
                                 "/api/staff/login", "/", "/api/staff/sign-up").permitAll()
-                        .requestMatchers("/api/staff/list").hasRole("STAFF")
+                        .requestMatchers("/api/staff/list").hasAuthority("STAFF")
+                        .requestMatchers("/api/ward/**").hasAuthority("WARD")
                         .anyRequest().authenticated())
                 .exceptionHandling(exceptionHandlingCustomizer ->
                         exceptionHandlingCustomizer.accessDeniedHandler(customAccessDeniedHandler)
