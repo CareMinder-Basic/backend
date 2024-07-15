@@ -1,11 +1,11 @@
 package com.careminder.backend.model.account;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class Ward {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,6 +13,7 @@ public class Ward {
 
     /** 병동의 이름 */
     private String wardName;
+    @Enumerated(EnumType.STRING)
     private Role role;
     private String loginId;
     private String password;
@@ -20,4 +21,17 @@ public class Ward {
     private String managerPhoneNumber;
     private String managerEmail;
 
+    protected Ward() {
+    }
+
+    @Builder
+    private Ward(String wardName, String loginId, String password, String managerName, String managerPhoneNumber, String managerEmail) {
+        this.wardName = wardName;
+        this.role = Role.WARD;
+        this.loginId = loginId;
+        this.password = password;
+        this.managerName = managerName;
+        this.managerPhoneNumber = managerPhoneNumber;
+        this.managerEmail = managerEmail;
+    }
 }

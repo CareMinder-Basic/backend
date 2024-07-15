@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: backend
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/cm_basic?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    username: root
+    password: wjdalsdk0513
+
+  #  datasource:
+  #    url: jdbc:mysql://cm-basic.c5oseuyc49wc.ap-northeast-2.rds.amazonaws.com/cm_basic_db?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+  #    username: root
+  #    password: cm05130513
+
+  # JPA
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+
+  # JWT
+  jwt:
+    secret : vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
+
+  # Email
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: dlwjdals7073@gamil.com
+    password: nvvv szaa mwed sthq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          enable: true
+          starttls:
+            enable: true
+            required : true
+
+  # Redis
+  data:
+    redis:
+      host: localhost
+      port: 6379

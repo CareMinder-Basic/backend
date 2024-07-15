@@ -4,4 +4,5 @@ import com.careminder.backend.model.account.Ward;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WardRepository extends JpaRepository<Ward, Long> {
+    Ward findByLoginId(String LoginId);
 }
