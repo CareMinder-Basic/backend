@@ -1,25 +1,27 @@
 package com.careminder.backend.model.chat;
 
+import com.careminder.backend.global.annotation.Association;
+import com.careminder.backend.model.account.Role;
 import jakarta.persistence.*;
 import lombok.Builder;
-import study.chat.global.annotation.Association;
 
 @Entity
 public class Subscription {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subscription_id")
-    private long id;
-    @Association @Column(name = "chat_room_id")
-    private long roomId;
+    private Long id;
     @Association
-    private long memberId;
+    @Column(name = "chat_room_id")
+    private Long roomId;
+    @Association(description = "채팅방을 구독한 계정을 찾기 위한 id")
+    private Long accountMappingId;
 
     protected Subscription(){}
 
     @Builder
-    public Subscription(final long roomId, final long memberId) {
+    public Subscription(final long roomId, final long accountMappingId) {
         this.roomId = roomId;
-        this.memberId = memberId;
+        this.accountMappingId = accountMappingId;
     }
 }

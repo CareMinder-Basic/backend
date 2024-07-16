@@ -3,14 +3,13 @@ package com.careminder.backend.dto.chat.chat_room;
 import com.careminder.backend.model.chat.ChatRoom;
 
 public record ChatRoomAppendRequest(
-        long memberId,
-        String name
+        String roomName
 ) {
 
-    public ChatRoom toEntity(){
+    public ChatRoom toEntity(final Long accountMappingId){
         return ChatRoom.builder()
-                .name(this.name)
-                .memberId(this.memberId)
+                .roomName(this.roomName)
+                .accountMappingId(accountMappingId)
                 .build();
     }
 }

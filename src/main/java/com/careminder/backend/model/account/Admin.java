@@ -11,8 +11,6 @@ public class Admin {
 
     /** 관리자의 이름 */
     private String name;
-    @Enumerated(EnumType.STRING)
-    private Role role;
     private String loginId;
     private String password;
     private String phoneNumber;

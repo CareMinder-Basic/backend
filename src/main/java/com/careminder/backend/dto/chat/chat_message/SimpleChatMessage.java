@@ -4,7 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record SimpleChatMessage(
-        String content,
-        long memberId
+        String content
 ) {
 }

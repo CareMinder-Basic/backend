@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static com.careminder.backend.global.constant.exception.AuthExceptionConstant.PASSWORD_ERROR;
 
 @Implement
-public class StaffAuthManager {
+public class StaffAuthManager implements BaseAuthManager{
 
     private final StaffRepository staffRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -27,6 +27,11 @@ public class StaffAuthManager {
         this.staffRepository = staffRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+    }
+
+    @Override
+    public String getName(final Long id) {
+        return staffRepository.getById(id).getName();
     }
 
     public JWTResponse login(final StaffLoginRequest staffLoginRequest){

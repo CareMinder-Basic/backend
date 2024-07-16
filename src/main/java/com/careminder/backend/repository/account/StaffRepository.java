@@ -20,7 +20,12 @@ public class StaffRepository {
     }
 
     public Staff getByLoginId(final String loginId){
-        return staffJpaRepository.findByLoginId(loginId).orElseThrow(
-                () -> new NotFoundException(STAFF_NOT_FOUND_ERROR.message()));
+        return staffJpaRepository.findByLoginId(loginId).orElseThrow(() ->
+                new NotFoundException(STAFF_NOT_FOUND_ERROR.message()));
+    }
+
+    public Staff getById(final Long id){
+        return staffJpaRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(STAFF_NOT_FOUND_ERROR.message()));
     }
 }

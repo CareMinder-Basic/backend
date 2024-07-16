@@ -7,24 +7,16 @@ import lombok.Builder;
 
 @Builder
 public record ChatLeaveMessageRequest(
-        long memberId,
         long roomId
 ) {
 
-    public ChatMessage toEntity(final String sender) {
+    public ChatMessage toEntity(final Long accountMappingId, final String senderName) {
         return ChatMessage.builder()
-                .memberId(memberId)
+                .accountMappingId(accountMappingId)
                 .roomId(roomId)
                 .type(MessageType.LEAVE)
-                .sender(sender)
-                .content(sender + "님이 퇴장했습니다.")
-                .build();
-    }
-
-    public static ChatLeaveMessageRequest from(final UnsubscribeRequest unsubscribeRequest){
-        return ChatLeaveMessageRequest.builder()
-                .memberId(unsubscribeRequest.memberId())
-                .roomId(unsubscribeRequest.roomId())
+                .senderName(senderName)
+                .content(senderName + "님이 퇴장했습니다.")
                 .build();
     }
 }

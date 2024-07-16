@@ -1,21 +1,21 @@
 package com.careminder.backend.dto.chat.chat_message;
 
-import study.chat.entity.ChatMessage;
-import study.chat.entity.MessageType;
+import com.careminder.backend.model.account.Role;
+import com.careminder.backend.model.chat.ChatMessage;
+import com.careminder.backend.model.chat.MessageType;
 
 public record ChatMessageRequest(
-        long memberId,
         long roomId,
         String content
 ) {
 
-    public ChatMessage toEntity(final String sender){
+    public ChatMessage toEntity(final Long accountMappingId, final String senderName){
         return ChatMessage.builder()
                 .type(MessageType.CHAT)
                 .roomId(roomId)
-                .memberId(memberId)
+                .accountMappingId(accountMappingId)
                 .content(content)
-                .sender(sender)
+                .senderName(senderName)
                 .build();
     }
 }

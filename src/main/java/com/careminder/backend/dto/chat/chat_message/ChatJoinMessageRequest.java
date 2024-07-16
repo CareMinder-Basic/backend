@@ -7,24 +7,16 @@ import lombok.Builder;
 
 @Builder
 public record ChatJoinMessageRequest(
-        long memberId,
         long roomId
 ) {
 
-    public ChatMessage toEntity(final String sender){
+    public ChatMessage toEntity(final Long accountMappingId, final String senderName){
         return ChatMessage.builder()
-                .memberId(memberId)
+                .accountMappingId(accountMappingId)
                 .roomId(roomId)
                 .type(MessageType.JOIN)
-                .sender(sender)
-                .content(sender + "님이 입장했습니다.")
-                .build();
-    }
-
-    public static ChatJoinMessageRequest from(final SubscriptionRequest subscriptionRequest){
-        return ChatJoinMessageRequest.builder()
-                .memberId(subscriptionRequest.memberId())
-                .roomId(subscriptionRequest.roomId())
+                .senderName(senderName)
+                .content(senderName + "님이 입장했습니다.")
                 .build();
     }
 }

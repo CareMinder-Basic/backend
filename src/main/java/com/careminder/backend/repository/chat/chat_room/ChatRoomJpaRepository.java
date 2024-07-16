@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ChatRoomJpaRepository extends JpaRepository<ChatRoom, Long> {
 
-    void deleteByMemberIdAndId(final long memberId, final long roomId);
+    void deleteByAccountMappingIdAndId(final Long accountMappingId, final Long roomId);
 }

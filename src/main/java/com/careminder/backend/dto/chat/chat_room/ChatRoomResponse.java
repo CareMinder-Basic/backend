@@ -13,8 +13,8 @@ public record ChatRoomResponse(
     public static ChatRoomResponse from(final ChatRoom chatRoom){
         return ChatRoomResponse.builder()
                 .id(chatRoom.getId())
-                .ownerId(chatRoom.getMemberId())
-                .name(chatRoom.getName())
+                .ownerId(chatRoom.getAccountMappingId())
+                .name(chatRoom.getRoomName())
                 .build();
     }
 }

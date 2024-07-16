@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/staff")
 @RestController
 public class StaffAuthController {
+
     private final StaffAuthService staffAuthService;
 
     public StaffAuthController(StaffAuthService staffAuthService) {
@@ -25,7 +26,7 @@ public class StaffAuthController {
 
     @GetMapping("/info")
     public String staffInfo(@CurrentUser CustomUserDetails userDetails){
-        return String.format("userId: %d , staff: %s" ,userDetails.getUserId(), userDetails.getAuthorities());
+        return String.format("accountId: %d , staff: %s" ,userDetails.getAccountId(), userDetails.getAuthorities());
     }
 
     @GetMapping("/list")

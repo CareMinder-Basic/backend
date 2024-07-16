@@ -58,11 +58,11 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         //토큰에서 username과 role 획득
-        Long userId = jwtUtil.getUserId(token);
+        Long accountId = jwtUtil.getAccountId(token);
         String role = jwtUtil.getRole(token);
 
         //UserDetails에 회원 정보 객체 담기
-        CustomUserDetails customUserDetails = new CustomUserDetails(userId, convertRole(role));
+        CustomUserDetails customUserDetails = new CustomUserDetails(accountId, convertRole(role));
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
