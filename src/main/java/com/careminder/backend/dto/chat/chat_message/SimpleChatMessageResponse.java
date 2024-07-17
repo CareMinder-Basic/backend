@@ -5,13 +5,13 @@ import lombok.Builder;
 
 @Builder
 public record SimpleChatMessageResponse(
-        String name,
+        String senderName,
         String content
 ) {
     public static SimpleChatMessageResponse from(final ChatMessage chatMessage) {
         return SimpleChatMessageResponse.builder()
                 .content(chatMessage.getContent())
-                .name(chatMessage.getSenderName())
+                .senderName(chatMessage.getSenderName())
                 .build();
     }
 }

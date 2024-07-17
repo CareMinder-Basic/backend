@@ -45,7 +45,12 @@ public class JWTFilter extends OncePerRequestFilter {
 
         System.out.println("authorization now");
         //Bearer 부분 제거 후 순수 토큰만 획득
-        String token = authorization.split(" ")[1];
+        String token = null;
+        try {
+            token = authorization.split(" ")[1];
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         //토큰 소멸 시간 검증
         if (jwtUtil.isExpired(token)) {
@@ -56,6 +61,8 @@ public class JWTFilter extends OncePerRequestFilter {
             //조건이 해당되면 메소드 종료 (필수)
             return;
         }
+
+        // todo: 토큰 검증
 
         //토큰에서 username과 role 획득
         Long accountId = jwtUtil.getAccountId(token);

@@ -6,15 +6,15 @@ import lombok.Builder;
 @Builder
 public record ChatRoomResponse(
         long id,
-        long ownerId,
-        String name
+        long accountMappingId,
+        String roomName
 ) {
 
     public static ChatRoomResponse from(final ChatRoom chatRoom){
         return ChatRoomResponse.builder()
                 .id(chatRoom.getId())
-                .ownerId(chatRoom.getAccountMappingId())
-                .name(chatRoom.getRoomName())
+                .accountMappingId(chatRoom.getAccountMappingId())
+                .roomName(chatRoom.getRoomName())
                 .build();
     }
 }

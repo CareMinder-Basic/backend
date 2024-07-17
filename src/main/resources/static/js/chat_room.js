@@ -1,36 +1,88 @@
 const apiPrefix = '/api'; // API prefix
 let stompClient = null;
 let currentRoomId = null;
-let memberId = 1; // 예시 멤버 ID
+let token = null;
 let subscriptions = {};
 
-document.addEventListener('DOMContentLoaded', function () {
-    promptForMemberId();
-    loadChatRooms();
+// Axios 인스턴스 생성
+const authAxios = axios.create({
+    baseURL: apiPrefix,
+    headers: {
+        'Content-Type': 'application/json'
+    }
 });
 
-async function promptForMemberId() {
-    let inputMemberId = prompt("사용자 ID를 입력하세요:");
+// 요청 인터셉터 추가
+authAxios.interceptors.request.use(
+    config => {
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
+    }
+);
 
-    // 사용자가 취소를 누르거나 빈 값을 입력한 경우 처리
-    if (inputMemberId === null || inputMemberId.trim() === "") {
-        alert("사용자 ID가 유효하지 않습니다. 페이지를 새로고침하여 다시 시도하세요.");
+document.addEventListener('DOMContentLoaded', function () {
+    checkTokenAndLoadChatRooms();
+});
+
+async function setToken(tokenVal) {
+    localStorage.setItem("token", tokenVal);
+    token = localStorage.getItem("token");
+}
+
+async function checkTokenAndLoadChatRooms() {
+
+    if (!token) {
+        const tokenVal = window.prompt("로그인이 필요합니다.");
+        await setToken(tokenVal);
+    }
+
+    try {
+        const response = await authAxios.get('/auth/info');
+        console.log('토큰 정보:', response.data);
+        displayUserInfo(response.data);
+        loadChatRooms();
+    } catch (error) {
+        console.error('토큰 검증 실패:', error);
+        alert("로그인이 필요합니다.");
+    }
+}
+
+function displayUserInfo(userInfo) {
+    const userInfoContainer = document.getElementById('user-info');
+    userInfoContainer.innerHTML = `
+        <p>Username: ${userInfo.name}</p>
+        <p>Role: ${userInfo.role}</p>
+    `;
+}
+
+async function createChatRoom() {
+    const roomNameInput = document.getElementById('roomNameInput');
+    const roomName = roomNameInput.value.trim();
+
+    if (!roomName) {
+        alert("채팅방 이름을 입력하세요.");
         return;
     }
 
-    // 입력된 memberId를 전역 변수에 할당
-    memberId = parseInt(inputMemberId); // 예시로 parseInt를 사용하여 숫자로 변환
-    if (isNaN(memberId)) {
-        alert("유효하지 않은 사용자 ID입니다. 페이지를 새로고침하여 다시 시도하세요.");
-        memberId = null; // memberId 초기화
-    } else {
-        console.log("사용자 ID로 설정된 값:", memberId);
+    try {
+        const response = await authAxios.post('/chat-rooms', {
+            roomName: roomName
+        });
+        alert("채팅방이 생성되었습니다.");
+        loadChatRooms(); // 채팅방 목록을 다시 불러옵니다.
+    } catch (error) {
+        handleError(error);
     }
 }
 
 async function loadChatRooms() {
     try {
-        const response = await axios.get(apiPrefix + '/chat-rooms');
+        const response = await authAxios.get('/chat-rooms');
         const chatRooms = response.data.data;
         displayChatRooms(chatRooms);
     } catch (error) {
@@ -44,7 +96,7 @@ async function displayChatRooms(chatRooms) {
 
     for (const room of chatRooms) {
         const roomElement = document.createElement('div');
-        roomElement.textContent = room.name;
+        roomElement.textContent = room.roomName;
 
         const button = await displayButton(room);
         if (button) {
@@ -62,9 +114,8 @@ async function displayChatRooms(chatRooms) {
 
 async function displayButton(room) {
     try {
-        const response = await axios.get(apiPrefix + '/check-subscribe', {
+        const response = await authAxios.get('/check-subscribe', {
             params: {
-                memberId: memberId,
                 roomId: room.id
             }
         });
@@ -93,11 +144,10 @@ async function displayButton(room) {
 async function subscribeToRoom(roomId) {
     try {
         const subscriptionRequest = {
-            memberId: memberId,
             roomId: roomId
         };
 
-        const response = await axios.post(apiPrefix + '/subscribe', subscriptionRequest);
+        const response = await authAxios.post('/subscribe', subscriptionRequest);
         alert(response.data);
 
         if (!stompClient) {
@@ -106,7 +156,7 @@ async function subscribeToRoom(roomId) {
 
         subscriptions[roomId] = stompClient.subscribe(`/topic/chat/${roomId}`, (message) => {
             const parsedMessage = JSON.parse(message.body);
-            showMessage(parsedMessage.memberId, parsedMessage.content);
+            showMessage(parsedMessage.senderName, parsedMessage.content);
         });
 
         loadChatRooms();
@@ -118,11 +168,10 @@ async function subscribeToRoom(roomId) {
 async function unsubscribeFromRoom(roomId, event) {
     try {
         const unsubscribeRequest = {
-            memberId: memberId,
             roomId: roomId
         };
 
-        const response = await axios.delete(apiPrefix + '/unsubscribe', { data: unsubscribeRequest });
+        const response = await authAxios.delete('/unsubscribe', { data: unsubscribeRequest });
         alert(response.data);
 
         if (stompClient) {
@@ -143,9 +192,8 @@ async function enterChatRoom(roomId) {
     currentRoomId = roomId;
 
     try {
-        const response = await axios.get(apiPrefix + '/check-subscribe', {
+        const response = await authAxios.get('/check-subscribe', {
             params: {
-                memberId: memberId,
                 roomId: roomId
             }
         });
@@ -157,8 +205,7 @@ async function enterChatRoom(roomId) {
             document.getElementById('chat-rooms').style.display = 'none';
 
             // Fetch chat history
-            const messagesResponse = await axios.get(apiPrefix + '/chat-history/' + roomId);
-            console.log(messagesResponse);
+            const messagesResponse = await authAxios.get('/chat-history/' + roomId);
             const messages = messagesResponse.data.data;
 
             // Clear existing messages
@@ -167,7 +214,7 @@ async function enterChatRoom(roomId) {
 
             // Display messages
             messages.forEach(message => {
-                showMessage(message.memberId, message.content);
+                showMessage(message.senderName, message.content);
             });
         } else {
             alert("채팅방을 먼저 구독하세요");
@@ -182,7 +229,7 @@ async function connectToWebSocket() {
         const socket = new SockJS('/ws'); // WebSocket 엔드포인트
         stompClient = Stomp.over(socket);
 
-        stompClient.connect({}, () => {
+        stompClient.connect({'Authorization': `Bearer ${token}`}, () => {
             console.log('WebSocket 연결 성공');
             resolve(stompClient);
         }, error => {
@@ -195,7 +242,6 @@ async function connectToWebSocket() {
 function sendMessage() {
     const messageInput = document.getElementById('messageInput');
     const message = {
-        memberId: memberId,
         content: messageInput.value
     };
 
@@ -214,10 +260,10 @@ function sendMessage() {
     }
 }
 
-function showMessage(id, content) {
+function showMessage(senderName, content) {
     const messagesContainer = document.getElementById('messages');
     const messageElement = document.createElement('div');
-    messageElement.textContent = "member" + id + " : " + content;
+    messageElement.textContent = senderName + " : " + content;
     messagesContainer.appendChild(messageElement);
 }
 

@@ -9,6 +9,8 @@ import com.careminder.backend.global.auth.CustomUserDetails;
 import com.careminder.backend.global.response.JWTResponse;
 import com.careminder.backend.service.account.StaffAuthService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +27,7 @@ public class StaffAuthController {
     }
 
     @GetMapping("/info")
-    public String staffInfo(@CurrentUser CustomUserDetails userDetails){
+    public String staffInfo(@CurrentUser final CustomUserDetails userDetails){
         return String.format("accountId: %d , staff: %s" ,userDetails.getAccountId(), userDetails.getAuthorities());
     }
 
@@ -39,8 +41,9 @@ public class StaffAuthController {
         return staffAuthService.login(staffLoginRequest);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping("/logout")
-    public void logout(){
+    public void logout(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization) {
 
     }
 

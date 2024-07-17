@@ -26,6 +26,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import java.io.IOException;
 import java.util.Collections;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -91,8 +93,9 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/ward/login", "/api/ward/sign-up","/swagger-ui/**",
-                                "/api/staff/login", "/", "/api/staff/sign-up").permitAll()
+                        .requestMatchers("/api/auth/info", "/api/ward/login", "/api/ward/sign-up", "/swagger-ui/**",
+                                "/api/staff/login", "/", "/api/staff/sign-up",
+                                "/html/**","/js/**").permitAll()
                         .requestMatchers("/api/staff/list").hasAuthority("STAFF")
                         .requestMatchers("/api/ward/**").hasAuthority("WARD")
                         .anyRequest().authenticated())
@@ -123,6 +126,6 @@ public class SecurityConfig {
         // 아래 url은 filter 에서 제외
         return web ->
                 web.ignoring()
-                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html","/admin/**","/css/**", "/js/**", "/images/**");
+                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html","/admin/**","/css/**", "/js/**", "/images/**","/ws/**");
     }
 }

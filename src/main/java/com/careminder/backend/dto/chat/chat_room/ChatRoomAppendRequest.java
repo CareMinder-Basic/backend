@@ -8,7 +8,7 @@ public record ChatRoomAppendRequest(
 
     public ChatRoom toEntity(final Long accountMappingId){
         return ChatRoom.builder()
-                .roomName(this.roomName)
+                .roomName(roomName)
                 .accountMappingId(accountMappingId)
                 .build();
     }

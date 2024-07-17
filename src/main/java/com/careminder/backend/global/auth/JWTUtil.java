@@ -18,6 +18,7 @@ public class JWTUtil {
     private SecretKey secretKey;
     private static final Long accessTokenValidTime = Duration.ofDays(15).toMillis(); // 만료시간 15일
     private static final Long refreshTokenValidTime = Duration.ofDays(30).toMillis(); // 만료시간 30일
+    public static final String HEADER = "Authorization";
 
     public JWTUtil(@Value("${spring.jwt.secret}")String secret) {
 

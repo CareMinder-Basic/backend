@@ -31,7 +31,7 @@ public class ChatRoomController {
     }
 
     @PostMapping("/chat-rooms")
-    public void appendChatRoom(@CurrentUser CustomUserDetails customUserDetails,
+    public void appendChatRoom(@CurrentUser final CustomUserDetails customUserDetails,
                                @RequestBody final ChatRoomAppendRequest chatRoomAppendRequest){
         chatRoomService.append(customUserDetails, chatRoomAppendRequest);
     }
