@@ -1,6 +1,9 @@
 package com.careminder.backend.global.config;
 
+import com.careminder.backend.global.interceptor.WebSocketInterceptor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -9,11 +12,16 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
 
+@Order(Ordered.HIGHEST_PRECEDENCE + 99)
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final
+    private final WebSocketInterceptor webSocketInterceptor;
+
+    public WebSocketConfig(final WebSocketInterceptor webSocketInterceptor) {
+        this.webSocketInterceptor = webSocketInterceptor;
+    }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -39,6 +47,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(jwtChannelInterceptor);
+        registration.interceptors(webSocketInterceptor);
     }
 }

@@ -106,14 +106,13 @@ public class SecurityConfig {
         //JWTFilter 등록
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JWTExceptionFilter(),
-                        JWTFilter.class);
+                .addFilterBefore(new JWTExceptionFilter(), JWTFilter.class);
 
         //LoginFilter 등록
 //        http
 //                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
-        //세션 설정
+//        세션 설정
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
