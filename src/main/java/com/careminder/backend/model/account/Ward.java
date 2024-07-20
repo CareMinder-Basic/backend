@@ -13,8 +13,6 @@ public class Ward {
 
     /** 병동의 이름 */
     private String wardName;
-    @Enumerated(EnumType.STRING)
-    private Role role;
     private String loginId;
     private String password;
     private String managerName;
@@ -27,7 +25,6 @@ public class Ward {
     @Builder
     private Ward(String wardName, String loginId, String password, String managerName, String managerPhoneNumber, String managerEmail) {
         this.wardName = wardName;
-        this.role = Role.WARD;
         this.loginId = loginId;
         this.password = password;
         this.managerName = managerName;

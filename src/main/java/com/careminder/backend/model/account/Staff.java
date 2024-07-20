@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
-@Entity
 @Getter
+@Entity
 public class Staff {
 
     @Id
@@ -14,8 +14,6 @@ public class Staff {
 
     /** 직원의 이름 */
     private String name;
-    @Enumerated(EnumType.STRING)
-    private Role role;
     private String loginId;
     private String password;
     private String phoneNumber;
@@ -31,7 +29,6 @@ public class Staff {
     @Builder
     public Staff(String name, String loginId, String password, String phoneNumber, String email, String nfc, String fingerprint, StaffRole staffRole) {
         this.name = name;
-        this.role = Role.STAFF;
         this.loginId = loginId;
         this.password = password;
         this.phoneNumber = phoneNumber;

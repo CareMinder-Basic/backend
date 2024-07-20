@@ -22,11 +22,11 @@ public record StaffSignUpRequest(
     public static final String NO_WARD_NAME = "병동 이름이 없습니다.";
     public static final String NO_PHONE_NUMBER = "핸드폰 번호가 없습니다.";
 
-    public Staff toEntity(final String encodePasssword){
+    public Staff toEntity(final String encodePassword){
         return Staff.builder()
                 .name(name)
                 .loginId(loginId)
-                .password(encodePasssword)
+                .password(encodePassword)
                 .phoneNumber(phoneNumber)
                 .email(email)
                 .nfc(nfc)
