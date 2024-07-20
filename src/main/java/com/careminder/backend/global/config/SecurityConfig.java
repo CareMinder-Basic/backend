@@ -82,7 +82,11 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/ward/login", "/", "/api/ward/sign-up","/swagger-ui/**").permitAll()
+                        .requestMatchers(
+                                "/api/ward/login",
+                                "/api/ward/sign-up",
+                                "/swagger-ui/**",
+                                "/api/mail/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
