@@ -36,7 +36,7 @@ public class StaffAuthManager implements BaseAuthManager{
 
     public JWTResponse login(final StaffLoginRequest staffLoginRequest){
         Staff staff = staffRepository.getByLoginId(staffLoginRequest.loginId());
-        if(!passwordEncoder.matches(staffLoginRequest.password(),staff.getPassword())){
+        if(!passwordEncoder.matches(staffLoginRequest.password(), staff.getPassword())){
             throw new InvalidCredentialsException(PASSWORD_ERROR.message());
         }
         return jwtUtil.createJWT(staff.getId(), Role.STAFF);

@@ -3,9 +3,11 @@ package com.careminder.backend.global.auth;
 import com.careminder.backend.model.account.Role;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 @Getter
@@ -67,5 +69,9 @@ public class CustomUserDetails implements UserDetails {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid role: " + roleString, e);
         }
+    }
+
+    public static Collection<GrantedAuthority> convertRole(final String role){
+        return Collections.singletonList(new SimpleGrantedAuthority(role));
     }
 }

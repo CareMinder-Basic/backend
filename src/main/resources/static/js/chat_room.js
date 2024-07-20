@@ -229,8 +229,9 @@ async function connectToWebSocket() {
         const socket = new SockJS('/ws'); // WebSocket 엔드포인트
         stompClient = Stomp.over(socket);
 
-        stompClient.connect({'Authorization': `Bearer ${token}`}, () => {
+        stompClient.connect({'Authorization': `Bearer ${token}`}, (frame) => {
             console.log('WebSocket 연결 성공');
+            console.log('연결 정보: ', frame);
             resolve(stompClient);
         }, error => {
             console.error('WebSocket 연결 실패:', error);

@@ -9,10 +9,8 @@ import com.careminder.backend.global.response.CollectionApiResponse;
 import com.careminder.backend.model.chat.ChatMessage;
 import com.careminder.backend.service.chat.chat_message.ChatMessageService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.handler.annotation.*;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,12 +31,29 @@ public class ChatMessageController {
 
     @MessageMapping("/chat/{roomId}")
     @SendTo("/topic/chat/{roomId}")
-    public SimpleChatMessageResponse sendMessage(final Principal principal,
+    public SimpleChatMessageResponse sendMessage(SimpMessageHeaderAccessor headerAccessor,
                                                  @DestinationVariable final long roomId, @Payload final SimpleChatMessage scm) {
-        // todo: 메시지 큐에 저장 + 일정 시간 이후 DB에 저장
-        log.info("principal {}",principal.toString());
-        CustomUserDetails customUserDetails = (CustomUserDetails) principal;
-        log.info("role = {}", customUserDetails.getRole());
+        // WebSocket 세션에서 유저 정보 가져오기
+        CustomUserDetails customUserDetails = (CustomUserDetails) headerAccessor.getSessionAttributes().get("user");
+
+        // 세션 ID 출력
+        String sessionId = headerAccessor.getSessionId();
+        System.out.println("Session ID: " + sessionId);
+        log.info("Session ID: {}", sessionId);
+
+        // Principal 정보 출력
+        if (customUserDetails != null) {
+            log.info("User ID: {}", customUserDetails.getUsername());
+            log.info("Role: {}", customUserDetails.getAuthorities().toString());
+        } else {
+            log.warn("User details are null");
+        }
+
+        // 메시지 내용 출력
+        log.info("Room ID: {}", roomId);
+        log.info("Message Content: {}", scm.content());
+
+        // 메시지 큐에 저장 + 일정 시간 이후 DB에 저장
         ChatMessageRequest chatMessageRequest = new ChatMessageRequest(roomId, scm.content());
         ChatMessage chatMessage = chatMessageService.append(customUserDetails, chatMessageRequest);
         return SimpleChatMessageResponse.from(chatMessage);

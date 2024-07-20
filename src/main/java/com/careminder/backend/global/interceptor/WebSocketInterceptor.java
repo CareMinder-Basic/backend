@@ -19,9 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -42,17 +40,10 @@ public class WebSocketInterceptor implements ChannelInterceptor {
             if (authorization != null && !authorization.isEmpty()) {
                 String token = authorization.getFirst().split(" ")[1];
                 try {
-                    Long accountId = jwtUtil.getAccountId(token);
-                    String role = jwtUtil.getRole(token);
-
-                    CustomUserDetails customUserDetails = new CustomUserDetails(accountId, convertRole(role));
-                    Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    Authentication authentication = jwtUtil.getAuthentication(token);
                     // WebSocket 세션에 Principal 객체 저장
-                    accessor.setUser(authToken);
-                } catch (JWTException e) {
-                    log.error("JWT Verification Failed: " + e.getMessage());
-                    return null;
+                    accessor.setUser(authentication);
+                    log.info("authToken 저장 완료");
                 } catch (Exception e) {
                     log.error("An unexpected error occurred: " + e.getMessage());
                     return null;
@@ -61,18 +52,9 @@ public class WebSocketInterceptor implements ChannelInterceptor {
                 log.error("Authorization header is not found");
                 return null;
             }
-        }else{
-            Principal user = accessor.getUser();
-            if(user != null){
-                System.out.println(user.getName());
-            }else{
-                System.out.println("user가 null");
-            }
+        } else {
+            log.info("command : {}", accessor.getCommand());
         }
         return message;
-    }
-
-    private Collection<GrantedAuthority> convertRole(final String role){
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
     }
 }
