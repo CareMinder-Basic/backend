@@ -37,7 +37,15 @@ public class DataInit implements CommandLineRunner {
                 .phoneNumber("010-1234-5678")
                 .build();
 
+        Staff staff2 = Staff.builder()
+                .name("간호사-2")
+                .loginId("2")
+                .password(passwordEncoder.encode("1"))
+                .phoneNumber("010-1234-5678")
+                .build();
+
         staffRepository.save(staff);
+        staffRepository.save(staff2);
 
         Ward ward = Ward.builder()
                 .wardName("병동-1")

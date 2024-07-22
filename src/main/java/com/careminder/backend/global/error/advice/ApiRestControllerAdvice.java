@@ -1,5 +1,7 @@
 package com.careminder.backend.global.error.advice;
 
+import com.careminder.backend.global.error.exception.BadRequestException;
+import com.careminder.backend.global.error.exception.ForbiddenException;
 import com.careminder.backend.global.error.exception.InvalidCredentialsException;
 import com.careminder.backend.global.error.exception.NotFoundException;
 import com.careminder.backend.global.response.ErrorResponse;
@@ -18,11 +20,27 @@ import java.util.Map;
 @RestControllerAdvice
 public class ApiRestControllerAdvice {
 
+    // 400
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    public ErrorResponse handleException(final BadRequestException e) {
+        log.info("BadRequestException={}", e.getMessage());
+        return ErrorResponse.of(e.getStatusCode(), e.getMessage());
+    }
+
     // 401
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(InvalidCredentialsException.class)
     public ErrorResponse handleException(final InvalidCredentialsException e) {
         log.info("InvalidCredentialsException={}", e.getMessage());
+        return ErrorResponse.of(e.getStatusCode(), e.getMessage());
+    }
+
+    // 403
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ForbiddenException.class)
+    public ErrorResponse handleException(final ForbiddenException e) {
+        log.info("ForbiddenException Exception={}", e.getMessage());
         return ErrorResponse.of(e.getStatusCode(), e.getMessage());
     }
 

@@ -1,7 +1,7 @@
 package com.careminder.backend.global.config;
 
 import com.careminder.backend.global.auth.JWTUtil;
-import com.careminder.backend.global.interceptor.CustomHandshakeInterceptor;
+import com.careminder.backend.global.interceptor.HttpHandshakeInterceptor;
 import com.careminder.backend.global.interceptor.WebSocketInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -19,13 +19,12 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final WebSocketInterceptor webSocketInterceptor;
     private final JWTUtil jwtUtil;
+    private final WebSocketInterceptor webSocketInterceptor;
 
-    public WebSocketConfig(final WebSocketInterceptor webSocketInterceptor,
-                           final JWTUtil jwtUtil) {
-        this.webSocketInterceptor = webSocketInterceptor;
+    public WebSocketConfig(final JWTUtil jwtUtil, final WebSocketInterceptor webSocketInterceptor) {
         this.jwtUtil = jwtUtil;
+        this.webSocketInterceptor = webSocketInterceptor;
     }
 
     @Override
@@ -38,11 +37,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .addInterceptors(new CustomHandshakeInterceptor(jwtUtil))
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
         registry.addEndpoint("/ws")
-                .addInterceptors(new CustomHandshakeInterceptor(jwtUtil))
                 .setAllowedOriginPatterns("*");
     }
 
@@ -52,8 +49,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setTimeToFirstMessage(30000);
     }
 
-//    @Override
-//    public void configureClientInboundChannel(ChannelRegistration registration) {
-//        registration.interceptors(webSocketInterceptor);
-//    }
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(webSocketInterceptor);
+    }
 }

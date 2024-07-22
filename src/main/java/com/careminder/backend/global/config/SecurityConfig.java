@@ -113,18 +113,28 @@ public class SecurityConfig {
 //                .addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
 //        세션 설정
-        http
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        http
+//                .sessionManagement((session) -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
 
         return http.build();
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(){
+    public WebSecurityCustomizer webSecurityCustomizer() {
         // 아래 url은 filter 에서 제외
-        return web ->
-                web.ignoring()
-                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui.html","/admin/**","/css/**", "/js/**", "/images/**","/ws/**");
+        return web -> web.ignoring()
+                .requestMatchers(
+                        antMatcher("/swagger-ui/**"),
+                        antMatcher("/v3/api-docs/**"),
+                        antMatcher("/swagger-resources/**"),
+                        antMatcher("/swagger-ui.html"),
+                        antMatcher("/admin/**"),
+                        antMatcher("/css/**"),
+                        antMatcher("/js/**"),
+                        antMatcher("/images/**"),
+                        antMatcher("/ws/**"),
+                        antMatcher("/websocket/**")
+                );
     }
 }

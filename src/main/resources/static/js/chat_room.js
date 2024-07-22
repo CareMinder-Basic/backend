@@ -1,7 +1,7 @@
 const apiPrefix = '/api'; // API prefix
 let stompClient = null;
 let currentRoomId = null;
-let token = null;
+let token = localStorage.getItem("token"); // 초기화 시 localStorage에서 토큰 값을 가져옴
 let subscriptions = {};
 
 // Axios 인스턴스 생성
@@ -31,24 +31,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
 async function setToken(tokenVal) {
     localStorage.setItem("token", tokenVal);
-    token = localStorage.getItem("token");
+    token = tokenVal;
 }
 
 async function checkTokenAndLoadChatRooms() {
-
     if (!token) {
         const tokenVal = window.prompt("로그인이 필요합니다.");
-        await setToken(tokenVal);
+        if (tokenVal) {
+            await setToken(tokenVal);
+        } else {
+            alert("토큰 값이 필요합니다. 페이지를 새로고침하고 다시 시도하세요.");
+            return;
+        }
     }
 
     try {
+        console.log(token);
         const response = await authAxios.get('/auth/info');
         console.log('토큰 정보:', response.data);
         displayUserInfo(response.data);
         loadChatRooms();
     } catch (error) {
         console.error('토큰 검증 실패:', error);
-        alert("로그인이 필요합니다.");
+        alert('토큰 검증에 실패했습니다. 페이지를 새로고침하고 다시 시도하세요.');
+        // 토큰이 유효하지 않다면, 토큰을 초기화하고 재입력 받도록 할 수 있습니다.
+        localStorage.removeItem("token");
+        token = null;
     }
 }
 
@@ -70,9 +78,7 @@ async function createChatRoom() {
     }
 
     try {
-        const response = await authAxios.post('/chat-rooms', {
-            roomName: roomName
-        });
+        const response = await authAxios.post('/chat-rooms', { roomName });
         alert("채팅방이 생성되었습니다.");
         loadChatRooms(); // 채팅방 목록을 다시 불러옵니다.
     } catch (error) {
@@ -105,7 +111,7 @@ async function displayChatRooms(chatRooms) {
 
         const enterButton = document.createElement('button');
         enterButton.textContent = 'Enter Room';
-        enterButton.onclick = (event) => enterChatRoom(room.id);
+        enterButton.onclick = () => enterChatRoom(room.id);
 
         roomElement.appendChild(enterButton);
         chatRoomsContainer.appendChild(roomElement);
@@ -114,22 +120,14 @@ async function displayChatRooms(chatRooms) {
 
 async function displayButton(room) {
     try {
-        const response = await authAxios.get('/check-subscribe', {
-            params: {
-                roomId: room.id
-            }
-        });
-
+        const response = await authAxios.get('/check-subscribe', { params: { roomId: room.id } });
         const isSubscribed = response.data;
-        let button = null;
+        let button = document.createElement('button');
 
         if (isSubscribed) {
-            button = document.createElement('button');
             button.textContent = 'Unsubscribe';
             button.onclick = (event) => unsubscribeFromRoom(room.id, event);
-
         } else {
-            button = document.createElement('button');
             button.textContent = 'Subscribe';
             button.onclick = (event) => subscribeToRoom(room.id, event);
         }
@@ -143,10 +141,7 @@ async function displayButton(room) {
 
 async function subscribeToRoom(roomId) {
     try {
-        const subscriptionRequest = {
-            roomId: roomId
-        };
-
+        const subscriptionRequest = { roomId };
         const response = await authAxios.post('/subscribe', subscriptionRequest);
         alert(response.data);
 
@@ -167,10 +162,7 @@ async function subscribeToRoom(roomId) {
 
 async function unsubscribeFromRoom(roomId, event) {
     try {
-        const unsubscribeRequest = {
-            roomId: roomId
-        };
-
+        const unsubscribeRequest = { roomId };
         const response = await authAxios.delete('/unsubscribe', { data: unsubscribeRequest });
         alert(response.data);
 
@@ -192,12 +184,7 @@ async function enterChatRoom(roomId) {
     currentRoomId = roomId;
 
     try {
-        const response = await authAxios.get('/check-subscribe', {
-            params: {
-                roomId: roomId
-            }
-        });
-
+        const response = await authAxios.get('/check-subscribe', { params: { roomId } });
         const isSubscribed = response.data;
 
         if (isSubscribed) {
@@ -205,7 +192,7 @@ async function enterChatRoom(roomId) {
             document.getElementById('chat-rooms').style.display = 'none';
 
             // Fetch chat history
-            const messagesResponse = await authAxios.get('/chat-history/' + roomId);
+            const messagesResponse = await authAxios.get(`/chat-history/${roomId}`);
             const messages = messagesResponse.data.data;
 
             // Clear existing messages
@@ -220,7 +207,7 @@ async function enterChatRoom(roomId) {
             alert("채팅방을 먼저 구독하세요");
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error.message);
     }
 }
 
@@ -229,7 +216,7 @@ async function connectToWebSocket() {
         const socket = new SockJS('/ws'); // WebSocket 엔드포인트
         stompClient = Stomp.over(socket);
 
-        stompClient.connect({'Authorization': `Bearer ${token}`}, (frame) => {
+        stompClient.connect({ 'Authorization': `Bearer ${token}` }, (frame) => {
             console.log('WebSocket 연결 성공');
             console.log('연결 정보: ', frame);
             resolve(stompClient);
@@ -242,9 +229,7 @@ async function connectToWebSocket() {
 
 function sendMessage() {
     const messageInput = document.getElementById('messageInput');
-    const message = {
-        content: messageInput.value
-    };
+    const message = { content: messageInput.value };
 
     if (!stompClient) {
         connectToWebSocket()
@@ -253,7 +238,7 @@ function sendMessage() {
                 messageInput.value = '';
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Error:', error.response.data.message);
             });
     } else {
         stompClient.send(`/app/chat/${currentRoomId}`, {}, JSON.stringify(message));
@@ -264,7 +249,7 @@ function sendMessage() {
 function showMessage(senderName, content) {
     const messagesContainer = document.getElementById('messages');
     const messageElement = document.createElement('div');
-    messageElement.textContent = senderName + " : " + content;
+    messageElement.textContent = `${senderName} : ${content}`;
     messagesContainer.appendChild(messageElement);
 }
 
@@ -281,7 +266,7 @@ function leaveRoom() {
 function handleError(error) {
     if (error.response) {
         const statusCode = error.response.status;
-        const message = error.response.data;
+        const message = error.response.data.message;
         alert(`Error ${statusCode}: ${message}`);
     } else if (error.request) {
         alert('No response received from the server.');
