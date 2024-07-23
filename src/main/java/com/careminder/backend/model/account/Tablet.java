@@ -15,14 +15,18 @@ public class Tablet {
     private Long id;
 
     private String tabletName;
+    private Long wardId;
     private Long areaId;
+    private Long patientId;
 
     protected Tablet() {
     }
 
     @Builder
-    public Tablet(String tabletName, Long areaId) {
+    public Tablet(String tabletName, Long wardId, Long areaId, Long patientId) {
         this.tabletName = tabletName;
+        this.wardId = wardId;
         this.areaId = areaId;
+        this.patientId = patientId;
     }
 }
