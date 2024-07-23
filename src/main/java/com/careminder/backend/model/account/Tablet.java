@@ -29,4 +29,8 @@ public class Tablet {
         this.areaId = areaId;
         this.patientId = patientId;
     }
+
+    public void updatePatientId(final Long patientId) {
+        this.patientId = patientId;
+    }
 }

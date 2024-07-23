@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.Builder;
 import lombok.Getter;
 
 @Entity
@@ -16,4 +17,11 @@ public class Patient {
     private String name;
     private String phoneNumber;
     private Gender gender;
+
+    @Builder
+    public Patient(String name, String phoneNumber, Gender gender) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+    }
 }

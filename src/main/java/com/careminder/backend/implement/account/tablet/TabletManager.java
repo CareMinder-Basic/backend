@@ -18,5 +18,11 @@ public class TabletManager {
         return tabletRepository.getById(tabletId);
     }
 
+    @Transactional
+    public void updatePatientId(final Long tabletId, final Long patientId){
+        Tablet tablet = tabletRepository.getById(tabletId);
+        tablet.updatePatientId(patientId);
+    }
+
 
 }
