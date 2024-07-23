@@ -105,7 +105,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/staff/list").hasAuthority("STAFF")
                         .requestMatchers("/api/ward/**").hasAuthority("WARD")
                         .anyRequest().authenticated())
-                .exceptionHandling(exceptionHandlingCustomizer ->
                         exceptionHandlingCustomizer.accessDeniedHandler(customAccessDeniedHandler)
                 );
 

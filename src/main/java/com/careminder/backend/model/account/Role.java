@@ -1,5 +1,5 @@
 package com.careminder.backend.model.account;
 
 public enum Role {
-    ADMIN, WARD, STAFF;
+    ADMIN, WARD, STAFF, Tablet;
 }
