@@ -22,4 +22,8 @@ public class PatientService {
         Patient patient = patientManager.createPatient(patientCrateRequest);
         tabletManager.updatePatientId(customUserDetails.getAccountId(),patient.getId());
     }
+
+    public void dischargePatient(final CustomUserDetails customUserDetails) {
+        tabletManager.updatePatientId(customUserDetails.getAccountId(),null);
+    }
 }

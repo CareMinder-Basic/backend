@@ -25,4 +25,11 @@ public class PatientController {
             @RequestBody final PatientCrateRequest patientCrateRequest){
         patientService.createPatient(customUserDetails, patientCrateRequest);
     }
+
+    @PostMapping("/discharge")
+    public void dischargePatient(
+            @CurrentUser final CustomUserDetails customUserDetails){
+        patientService.dischargePatient(customUserDetails);
+    }
+
 }
