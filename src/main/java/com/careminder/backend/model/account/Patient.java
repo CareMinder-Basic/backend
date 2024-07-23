@@ -18,6 +18,8 @@ public class Patient {
     private String phoneNumber;
     private Gender gender;
 
+    protected Patient() {}
+
     @Builder
     public Patient(String name, String phoneNumber, Gender gender) {
         this.name = name;

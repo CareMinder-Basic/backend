@@ -18,7 +18,7 @@ public class ChatMessageRepository {
         chatMessageJpaRepository.save(chatMessage);
     }
 
-    public List<ChatMessage> getAllByRoomId(final long roomId){
-        return chatMessageJpaRepository.getAllByRoomId(roomId);
+    public List<ChatMessage> getAllByRoomId(final long patientRequestId){
+        return chatMessageJpaRepository.getAllByPatientRequestId(patientRequestId);
     }
 }

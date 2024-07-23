@@ -10,17 +10,16 @@ import lombok.Getter;
 public class ChatRoom {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_room_id")
     private Long id;
-    @Association(description = "채팅방 주인 계정의 id를 찾기 위한 매핑 id")
-    private Long accountMappingId;
     private String roomName;
+    @Association(description = "해당 채팅의 요청 id")
+    private Long patientRequestId;
 
     protected ChatRoom(){}
 
     @Builder
-    public ChatRoom(final Long accountMappingId, final String roomName) {
-        this.accountMappingId = accountMappingId;
+    public ChatRoom(final String roomName, final Long patientRequestId) {
+        this.patientRequestId = patientRequestId;
         this.roomName = roomName;
     }
 }

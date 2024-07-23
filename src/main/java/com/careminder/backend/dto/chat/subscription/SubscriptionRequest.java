@@ -1,15 +1,17 @@
 package com.careminder.backend.dto.chat.subscription;
 
+import com.careminder.backend.global.auth.CustomUserDetails;
 import com.careminder.backend.model.chat.Subscription;
 
 public record SubscriptionRequest(
-        Long roomId
+        Long patientRequestId
 ) {
 
-    public Subscription toEntity(final Long accountMappingId){
+    public Subscription toEntity(final CustomUserDetails customUserDetails){
         return Subscription.builder()
-                .roomId(roomId)
-                .accountMappingId(accountMappingId)
+                .patientRequestId(patientRequestId)
+                .accountId(customUserDetails.getAccountId())
+                .role(customUserDetails.getRole())
                 .build();
     }
 }

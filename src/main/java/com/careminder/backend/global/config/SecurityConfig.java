@@ -93,18 +93,19 @@ public class SecurityConfig {
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/auth/info",
-                                "/api/ward/login",
-                                "/api/ward/sign-up",
-                                "/swagger-ui/**",
-                                "/api/staff/login",
-                                "/",
-                                "/api/staff/sign-up",
-                                "/html/**",
-                                "/js/**").permitAll()
-                        .requestMatchers("/api/staff/list").hasAuthority("STAFF")
-                        .requestMatchers("/api/ward/**").hasAuthority("WARD")
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
+//                        .requestMatchers("/api/auth/info",
+//                                "/api/ward/login",
+//                                "/api/ward/sign-up",
+//                                "/swagger-ui/**",
+//                                "/api/staff/login",
+//                                "/",
+//                                "/api/staff/sign-up",
+//                                "/html/**",
+//                                "/js/**").permitAll()
+//                        .requestMatchers("/api/staff/list").hasAuthority("STAFF")
+//                        .requestMatchers("/api/ward/**").hasAuthority("WARD")
+//                        .anyRequest().authenticated())
                 .exceptionHandling(exceptionHandlingCustomizer ->
                         exceptionHandlingCustomizer.accessDeniedHandler(customAccessDeniedHandler)
                 );

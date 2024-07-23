@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ChatMessageJpaRepository extends JpaRepository<ChatMessage, Long> {
 
-    List<ChatMessage> getAllByRoomId(final long roomId);
+    List<ChatMessage> getAllByPatientRequestId(final Long patientRequestId);
 }

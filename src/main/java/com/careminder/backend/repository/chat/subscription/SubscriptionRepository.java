@@ -16,11 +16,11 @@ public class SubscriptionRepository {
         subscriptionJpaRepository.save(subscription);
     }
     
-    public boolean existsByAccountMappingIdAndRoomId(final long accountMappingId, final long roomId){
-        return subscriptionJpaRepository.existsByAccountMappingIdAndRoomId(accountMappingId, roomId);
+    public boolean existsByAccountIdAndPatientRequestId(final Long accountId, final Long patientRequestId){
+        return subscriptionJpaRepository.existsByAccountIdAndPatientRequestId(accountId, patientRequestId);
     }
 
-    public void deleteByAccountMappingIdAndRoomId(final long accountMappingId, final long roomId){
-        subscriptionJpaRepository.deleteByAccountMappingIdAndRoomId(accountMappingId, roomId);
+    public void deleteByAccountIdAndPatientRequestId(final Long accountId, final Long patientRequestId){
+        subscriptionJpaRepository.deleteByAccountIdAndPatientRequestId(accountId, patientRequestId);
     }
 }

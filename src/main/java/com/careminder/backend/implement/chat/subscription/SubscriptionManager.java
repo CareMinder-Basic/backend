@@ -1,7 +1,6 @@
 package com.careminder.backend.implement.chat.subscription;
 
 import com.careminder.backend.global.annotation.Implement;
-import com.careminder.backend.implement.account.AccountMappingManager;
 import com.careminder.backend.implement.account.AuthManagerFactory;
 import com.careminder.backend.model.chat.Subscription;
 import com.careminder.backend.repository.chat.subscription.SubscriptionRepository;
@@ -19,11 +18,11 @@ public class SubscriptionManager {
         subscriptionRepository.save(subscription);
     }
 
-    public boolean existsByAccountMappingIdAndRoomId(final long accountMappingId, final long roomId){
-        return subscriptionRepository.existsByAccountMappingIdAndRoomId(accountMappingId, roomId);
+    public boolean existsByAccountIdAndPatientRequestId(final Long accountId, final Long patientRequestId){
+        return subscriptionRepository.existsByAccountIdAndPatientRequestId(accountId, patientRequestId);
     }
 
-    public void deleteByAccountMappingIdAndRoomId(final long accountMappingId, final long roomId){
-        subscriptionRepository.deleteByAccountMappingIdAndRoomId(accountMappingId, roomId);
+    public void deleteByAccountIdAndPatientRequestId(final Long accountId, final Long patientRequestId){
+        subscriptionRepository.deleteByAccountIdAndPatientRequestId(accountId, patientRequestId);
     }
 }

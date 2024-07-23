@@ -9,19 +9,20 @@ import lombok.Builder;
 public class Subscription {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "subscription_id")
     private Long id;
-    @Association
-    @Column(name = "chat_room_id")
-    private Long roomId;
+    @Association(description = "환자 요청 id, 채팅이 이뤄지고 있는 roomId 역할")
+    private Long patientRequestId;
     @Association(description = "채팅방을 구독한 계정을 찾기 위한 id")
-    private Long accountMappingId;
+    private Long accountId;
+    @Association(description = "채팅방을 구독한 계정의 역할")
+    private Role role;
 
     protected Subscription(){}
 
     @Builder
-    public Subscription(final long roomId, final long accountMappingId) {
-        this.roomId = roomId;
-        this.accountMappingId = accountMappingId;
+    public Subscription(final Long patientRequestId, final Long accountId, final Role role) {
+        this.patientRequestId = patientRequestId;
+        this.accountId = accountId;
+        this.role = role;
     }
 }
