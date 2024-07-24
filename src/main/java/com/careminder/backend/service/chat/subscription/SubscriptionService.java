@@ -24,7 +24,6 @@ public class SubscriptionService {
         this.chatMessageManager = chatMessageManager;
     }
 
-    @Transactional
     public void subscribe(final CustomUserDetails customUserDetails, final SubscriptionRequest subscriptionRequest){
         long patientRequestId = subscriptionRequest.patientRequestId();
         if(isSubscribed(customUserDetails.getAccountId(), patientRequestId)){
@@ -33,13 +32,11 @@ public class SubscriptionService {
         subscriptionManager.save(subscriptionRequest.toEntity(customUserDetails));
     }
 
-    @Transactional
     public void unsubscribe(final CustomUserDetails customUserDetails, final UnsubscribeRequest unsubscribeRequest){
         long patientRequestId = unsubscribeRequest.patientRequestId();
         subscriptionManager.deleteByAccountIdAndPatientRequestId(customUserDetails.getAccountId(), patientRequestId);
     }
 
-    @Transactional(readOnly = true)
     public boolean isSubscribed(final long accountId, final long roomId){
         return subscriptionManager.existsByAccountIdAndPatientRequestId(accountId, roomId);
     }

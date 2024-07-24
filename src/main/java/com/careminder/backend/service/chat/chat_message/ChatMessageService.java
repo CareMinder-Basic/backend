@@ -23,12 +23,10 @@ public class ChatMessageService {
         this.authManagerFactory = authManagerFactory;
     }
 
-    @Transactional(readOnly = true)
     public ChatMessage append(final CustomUserDetails customUserDetails, final ChatMessageRequest chatMessageRequest) {
         return chatMessageManager.appendChat(customUserDetails, chatMessageRequest);
     }
 
-    @Transactional(readOnly = true)
     public List<SimpleChatMessageResponse> getAllByPatientRequestId(final long roomId) {
         return chatMessageManager.getAllByPatientRequestId(roomId).stream().map(SimpleChatMessageResponse::from).toList();
     }

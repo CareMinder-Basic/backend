@@ -8,6 +8,7 @@ import com.careminder.backend.implement.account.BaseAuthManager;
 import com.careminder.backend.model.account.constant.Role;
 import com.careminder.backend.model.chat.chat_message.ChatMessage;
 import com.careminder.backend.repository.chat.chat_message.ChatMessageRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class ChatMessageManager {
         this.authManagerFactory = authManagerFactory;
     }
 
+    @Transactional
     public ChatMessage appendChat(final CustomUserDetails customUserDetails, final ChatMessageRequest chatMessageRequest){
         String senderName = getSenderName(customUserDetails);
         ChatMessage chatMessage = chatMessageRequest.toEntity(customUserDetails, senderName);
@@ -30,8 +32,9 @@ public class ChatMessageManager {
         return chatMessage;
     }
 
-    public List<ChatMessage> getAllByPatientRequestId(final long roomId){
-        return chatMessageRepository.getAllByPatientRequestId(roomId);
+    @Transactional(readOnly = true)
+    public List<ChatMessage> getAllByPatientRequestId(final long patientRequestId){
+        return chatMessageRepository.getAllByPatientRequestId(patientRequestId);
     }
 
     private String getSenderName(final CustomUserDetails customUserDetails){

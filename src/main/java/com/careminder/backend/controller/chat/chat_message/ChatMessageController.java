@@ -27,22 +27,22 @@ public class ChatMessageController {
         this.chatMessageService = chatMessageService;
     }
 
-    @MessageMapping("/chat/{patientId}")
-    @SendTo("/topic/chat/{patientId}")
+    @MessageMapping("/chat/{patientRequestId}")
+    @SendTo("/topic/chat/{patientRequestId}")
     public SimpleChatMessageResponse sendMessage(@Header("simpSessionAttributes") Map<String, Object> attributes,
-                                                 @DestinationVariable final long patientId, @Payload final SimpleChatMessage scm) {
+                                                 @DestinationVariable final long patientRequestId, @Payload final SimpleChatMessage scm) {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) ((Authentication) attributes.get("user")).getPrincipal();
 
         // todo: 메시지 큐에 저장 + 일정 시간 이후 DB에 저장
-        ChatMessageRequest chatMessageRequest = new ChatMessageRequest(patientId, scm.content());
+        ChatMessageRequest chatMessageRequest = new ChatMessageRequest(patientRequestId, scm.content());
         ChatMessage chatMessage = chatMessageService.append(customUserDetails, chatMessageRequest);
         return SimpleChatMessageResponse.from(chatMessage);
     }
 
     @ResponseBody
-    @GetMapping("/api/chat-history/{roomId}")
-    public CollectionApiResponse<SimpleChatMessageResponse> getMessages(@PathVariable final long roomId){
-        return CollectionApiResponse.from(chatMessageService.getAllByPatientRequestId(roomId));
+    @GetMapping("/api/chat-history/{patientRequestId}")
+    public CollectionApiResponse<SimpleChatMessageResponse> getMessages(@PathVariable final long patientRequestId){
+        return CollectionApiResponse.from(chatMessageService.getAllByPatientRequestId(patientRequestId));
     }
 }
