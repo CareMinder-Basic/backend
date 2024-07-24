@@ -7,25 +7,19 @@ let subscriptions = {};
 // Axios 인스턴스 생성
 const authAxios = axios.create({
     baseURL: apiPrefix,
-    headers: {
-        'Content-Type': 'application/json'
-    }
+    headers: { 'Content-Type': 'application/json' }
 });
 
 // 요청 인터셉터 추가
 authAxios.interceptors.request.use(
     config => {
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
-        }
+        if (token) config.headers['Authorization'] = `Bearer ${token}`;
         return config;
     },
-    error => {
-        return Promise.reject(error);
-    }
+    error => Promise.reject(error)
 );
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     checkTokenAndLoadPatientRequests();
     loadStaffList();
 });
@@ -47,23 +41,19 @@ async function checkTokenAndLoadPatientRequests() {
     }
 
     try {
-        console.log(token);
         const response = await authAxios.get('/auth/info');
-        console.log('토큰 정보:', response.data);
         displayUserInfo(response.data);
         await loadPatientRequest();
     } catch (error) {
         console.error('토큰 검증 실패:', error);
         alert('토큰 검증에 실패했습니다. 페이지를 새로고침하고 다시 시도하세요.');
-        // 토큰이 유효하지 않다면, 토큰을 초기화하고 재입력 요청
         localStorage.removeItem("token");
         token = null;
     }
 }
 
 function displayUserInfo(userInfo) {
-    const userInfoContainer = document.getElementById('user-info');
-    userInfoContainer.innerHTML = `
+    document.getElementById('user-info').innerHTML = `
         <p>Username: ${userInfo.name}</p>
         <p>Role: ${userInfo.role}</p>
     `;
@@ -86,8 +76,8 @@ async function createPatientRequest() {
     }
 
     try {
-        const patientRequestAppender = {staffId: staffId, content: requestContent}
-        const response = await authAxios.post('/patient-request', patientRequestAppender);
+        const patientRequestAppender = { staffId, content: requestContent };
+        await authAxios.post('/patient-request', patientRequestAppender);
         alert("요청이 생성되었습니다.");
         await loadPatientRequest(); // 채팅방 목록을 다시 불러옵니다.
     } catch (error) {
@@ -96,11 +86,9 @@ async function createPatientRequest() {
 }
 
 async function loadStaffList() {
-    console.log("호출")
     try {
         const response = await authAxios.get('/staff/list');
         const staffList = response.data.data;
-        console.log(staffList)
         const staffSelect = document.getElementById('staffSelect');
 
         staffList.forEach(staff => {
@@ -130,6 +118,7 @@ async function displayPatientRequests(patientRequests) {
 
     for (const patientRequest of patientRequests) {
         const roomElement = document.createElement('div');
+        roomElement.className = 'd-flex align-items-center mb-2'; // 부트스트랩 클래스 추가
         roomElement.textContent = patientRequest.content;
 
         const button = await displayButton(patientRequest);
@@ -138,10 +127,17 @@ async function displayPatientRequests(patientRequests) {
         }
 
         const enterButton = document.createElement('button');
+        enterButton.className = 'btn btn-primary ms-2'; // 부트스트랩 클래스 추가
         enterButton.textContent = '채팅 입장';
-        enterButton.onclick = () => enterPatientRequest(patientRequest.id);
+        enterButton.onclick = () => enterPatientRequest(patientRequest.content, patientRequest.id);
 
         roomElement.appendChild(enterButton);
+
+        const timeAgoText = document.createElement('span');
+        timeAgoText.className = 'ms-2 text-muted'; // 부트스트랩 클래스 추가
+        timeAgoText.textContent = timeAgo(patientRequest.createdAt);
+        roomElement.appendChild(timeAgoText);
+
         patientRequestContainer.appendChild(roomElement);
     }
 }
@@ -150,7 +146,8 @@ async function displayButton(patientRequest) {
     try {
         const response = await authAxios.get('patient-request/check-subscribe', { params: { patientRequestId: patientRequest.id } });
         const isSubscribed = response.data;
-        let button = document.createElement('button');
+        const button = document.createElement('button');
+        button.className = 'btn btn-secondary ms-2'; // 부트스트랩 클래스 추가
 
         if (isSubscribed) {
             button.textContent = '요청 종료';
@@ -169,7 +166,7 @@ async function displayButton(patientRequest) {
 
 async function subscribeToRoom(patientRequestId) {
     try {
-        const subscriptionRequest = { patientRequestId: patientRequestId };
+        const subscriptionRequest = { patientRequestId };
         const response = await authAxios.post('patient-request/subscribe', subscriptionRequest);
         alert(response.data);
 
@@ -179,7 +176,6 @@ async function subscribeToRoom(patientRequestId) {
 
         subscriptions[patientRequestId] = stompClient.subscribe(`/topic/chat/${patientRequestId}`, (message) => {
             const parsedMessage = JSON.parse(message.body);
-            console.log(parsedMessage);
             showMessage(parsedMessage.role, parsedMessage.senderName, parsedMessage.content, parsedMessage.createdAt);
         });
 
@@ -209,28 +205,30 @@ async function unsubscribeFromRoom(roomId, event) {
     }
 }
 
-async function enterPatientRequest(patientRequestId) {
+async function enterPatientRequest(patientRequestContent, patientRequestId) {
     currentPatientRequestId = patientRequestId;
 
     try {
-        const response = await authAxios.get('patient-request/check-subscribe', { params: { patientRequestId: patientRequestId } });
+        const response = await authAxios.get('patient-request/check-subscribe', { params: { patientRequestId } });
         const isSubscribed = response.data;
 
         if (isSubscribed) {
             document.getElementById('patient-request-container').style.display = 'block';
             document.getElementById('patient-requests').style.display = 'none';
 
-            // Fetch chat history
+            // 채팅 기록 가져옴
             const messagesResponse = await authAxios.get(`/chat-history/${patientRequestId}`);
             const messages = messagesResponse.data.data;
 
-            // Clear existing messages
+            // 채팅방 제목 (환자의 요청)
+            document.getElementById('patient-request-title').textContent = patientRequestContent;
+
+            // 기존 채팅 비우기
             const messagesContainer = document.getElementById('messages');
             messagesContainer.innerHTML = '';
 
-            // Display messages
+            // 채팅 기록 표시
             messages.forEach(message => {
-                console.log(message);
                 showMessage(message.role, message.senderName, message.content, message.createdAt);
             });
         } else {
@@ -248,7 +246,6 @@ async function connectToWebSocket() {
 
         stompClient.connect({ 'Authorization': `Bearer ${token}` }, (frame) => {
             console.log('WebSocket 연결 성공');
-            console.log('연결 정보: ', frame);
             resolve(stompClient);
         }, error => {
             console.error('WebSocket 연결 실패:', error);
@@ -280,12 +277,15 @@ function showMessage(role, senderName, content, createdAt) {
     const messagesContainer = document.getElementById('messages');
     const messageElement = document.createElement('div');
     const timeAgoText = timeAgo(createdAt);
-    if(role === "STAFF"){
+
+    if (role === "STAFF") {
         messageElement.textContent = `(직원) ${senderName} : ${content} - ${timeAgoText}`;
-    }else if(role === "TABLET"){
+    } else if (role === "TABLET") {
         messageElement.textContent = `(태블릿) ${senderName} : ${content} - ${timeAgoText}`;
     }
+
     messagesContainer.appendChild(messageElement);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight; // 새로운 메시지가 추가될 때 자동으로 스크롤
 }
 
 function leaveRoom() {
@@ -294,15 +294,12 @@ function leaveRoom() {
     document.getElementById('patient-requests').style.display = 'block';
 
     // Clear all messages
-    const messagesContainer = document.getElementById('messages');
-    messagesContainer.innerHTML = '';
+    document.getElementById('messages').innerHTML = '';
 }
 
 function handleError(error) {
     if (error.response) {
-        const statusCode = error.response.status;
-        const message = error.response.data.message;
-        alert(`Error ${statusCode}: ${message}`);
+        alert(`Error ${error.response.status}: ${error.response.data.message}`);
     } else if (error.request) {
         alert('No response received from the server.');
     } else {
@@ -321,10 +318,9 @@ function timeAgo(createdAt) {
     const diffMs = now - createdTime;
     const diffMins = Math.floor(diffMs / 60000); // 밀리초를 분으로 변환
 
-    if (diffMins < 1){
+    if (diffMins < 1) {
         return `방금`;
-    }
-    else if (diffMins < 60) {
+    } else if (diffMins < 60) {
         return `${diffMins}분 전`;
     } else {
         const diffHours = Math.floor(diffMins / 60);

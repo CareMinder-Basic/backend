@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Patient Request Handle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
@@ -10,24 +11,24 @@
 </head>
 <body>
 <h1>Patient Requests</h1>
-<div id="user-info"></div>
+<div id="user-info" class="mb-3"></div>
 
-<div id="create-patient-request">
-    <input type="text" id="patientRequestInput" placeholder="Enter Request">
-    <select id="staffSelect">
+<div id="create-patient-request" class="mb-3">
+    <input type="text" id="patientRequestInput" class="form-control mb-2" placeholder="Enter Request">
+    <select id="staffSelect" class="form-select mb-2">
         <option value="">Select Staff</option>
     </select>
-    <button onclick="createPatientRequest()">Create Request</button>
+    <button class="btn btn-primary" onclick="createPatientRequest()">Create Request</button>
 </div>
 
-<div id="patient-requests"></div>
+<div id="patient-requests" class="mb-3"></div>
 
 <div id="patient-request-container" style="display:none;">
     <h2 id="patient-request-title"></h2>
-    <div id="messages"></div>
-    <input type="text" id="messageInput" placeholder="Type a message...">
-    <button onclick="sendMessage()">Send</button>
-    <button onclick="leaveRoom()">Leave Room</button>
+    <div id="messages" class="mb-3"></div>
+    <input type="text" id="messageInput" class="form-control mb-2" placeholder="Type a message...">
+    <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+    <button class="btn btn-secondary" onclick="leaveRoom()">Leave Room</button>
 </div>
 </body>
 </html>
