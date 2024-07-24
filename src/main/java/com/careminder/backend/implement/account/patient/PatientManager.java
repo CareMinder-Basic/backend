@@ -1,6 +1,6 @@
 package com.careminder.backend.implement.account.patient;
 
-import com.careminder.backend.dto.account.PatientCrateRequest;
+import com.careminder.backend.dto.account.PatientCreateRequest;
 import com.careminder.backend.global.annotation.Implement;
 import com.careminder.backend.model.account.Patient;
 import com.careminder.backend.repository.account.PatientRepository;
@@ -16,7 +16,7 @@ public class PatientManager{
     }
 
     @Transactional
-    public Patient createPatient(final PatientCrateRequest patientCrateRequest){
-        return patientRepository.save(patientCrateRequest.toEntity());
+    public Patient createPatient(final PatientCreateRequest patientCreateRequest){
+        return patientRepository.save(patientCreateRequest.toEntity());
     }
 }

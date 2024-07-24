@@ -4,6 +4,8 @@ import com.careminder.backend.global.error.exception.NotFoundException;
 import com.careminder.backend.model.account.Staff;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static com.careminder.backend.global.constant.exception.StaffExceptionConstant.STAFF_NOT_FOUND_ERROR;
 
 @Repository
@@ -27,5 +29,9 @@ public class StaffRepository {
     public Staff getById(final Long id){
         return staffJpaRepository.findById(id).orElseThrow(() ->
                 new NotFoundException(STAFF_NOT_FOUND_ERROR.message()));
+    }
+
+    public List<Staff> findAll(){
+        return staffJpaRepository.findAll();
     }
 }

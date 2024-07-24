@@ -1,12 +1,11 @@
 package com.careminder.backend.controller.account;
 
-import com.careminder.backend.dto.account.StaffLoginRequest;
-import com.careminder.backend.dto.account.StaffSignUpRequest;
-import com.careminder.backend.dto.account.WardLoginRequest;
-import com.careminder.backend.dto.account.WardSignUpRequest;
+import com.careminder.backend.dto.account.*;
 import com.careminder.backend.global.annotation.CurrentUser;
 import com.careminder.backend.global.auth.CustomUserDetails;
+import com.careminder.backend.global.response.CollectionApiResponse;
 import com.careminder.backend.global.response.JWTResponse;
+import com.careminder.backend.model.account.Staff;
 import com.careminder.backend.service.account.StaffAuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/api/staff")
 @RestController
@@ -28,12 +29,12 @@ public class StaffAuthController {
 
     @GetMapping("/info")
     public String staffInfo(@CurrentUser final CustomUserDetails userDetails){
-        return String.format("accountId: %d , staff: %s" ,userDetails.getAccountId(), userDetails.getAuthorities());
+        return String.format("accountId: %d , role: %s" ,userDetails.getAccountId(), userDetails.getRole());
     }
 
     @GetMapping("/list")
-    public String staffList(){
-        return "요청 성공";
+    public CollectionApiResponse<StaffInfoResponse> staffList(){
+        return CollectionApiResponse.from(staffAuthService.getAllStaff());
     }
 
     @PostMapping("/login")

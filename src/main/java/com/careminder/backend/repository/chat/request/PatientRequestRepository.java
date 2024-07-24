@@ -1,9 +1,9 @@
 package com.careminder.backend.repository.chat.request;
 
 import com.careminder.backend.dto.chat.request.PatientRequestResponse;
-import com.careminder.backend.dto.request.QPatientRequestResponse;
+import com.careminder.backend.dto.chat.request.QPatientRequestResponse;
 import com.careminder.backend.model.chat.request.PatientRequest;
-import com.careminder.backend.model.request.QPatientRequest;
+import com.careminder.backend.model.chat.request.QPatientRequest;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 

@@ -1,5 +1,6 @@
 package com.careminder.backend.implement.account;
 
+import com.careminder.backend.dto.account.StaffInfoResponse;
 import com.careminder.backend.dto.account.StaffLoginRequest;
 import com.careminder.backend.dto.account.StaffSignUpRequest;
 import com.careminder.backend.global.annotation.Implement;
@@ -11,6 +12,8 @@ import com.careminder.backend.model.account.Staff;
 import com.careminder.backend.repository.account.StaffRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.careminder.backend.global.constant.exception.AuthExceptionConstant.PASSWORD_ERROR;
 
@@ -54,5 +57,9 @@ public class StaffAuthManager implements BaseAuthManager{
 
     private String passwordEncode(final String password){
         return passwordEncoder.encode(password);
+    }
+
+    public List<StaffInfoResponse> getAllStaff() {
+        return staffRepository.findAll().stream().map(StaffInfoResponse::from).toList();
     }
 }

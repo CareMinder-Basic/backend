@@ -1,6 +1,6 @@
 package com.careminder.backend.controller.account;
 
-import com.careminder.backend.dto.account.PatientCrateRequest;
+import com.careminder.backend.dto.account.PatientCreateRequest;
 import com.careminder.backend.global.annotation.CurrentUser;
 import com.careminder.backend.global.auth.CustomUserDetails;
 import com.careminder.backend.service.account.PatientService;
@@ -22,8 +22,8 @@ public class PatientController {
     @PostMapping
     public void createPatient(
             @CurrentUser final CustomUserDetails customUserDetails,
-            @RequestBody final PatientCrateRequest patientCrateRequest){
-        patientService.createPatient(customUserDetails, patientCrateRequest);
+            @RequestBody final PatientCreateRequest patientCreateRequest){
+        patientService.createPatient(customUserDetails, patientCreateRequest);
     }
 
     @PostMapping("/discharge")

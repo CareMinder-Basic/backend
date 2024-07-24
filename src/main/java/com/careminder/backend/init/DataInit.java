@@ -3,6 +3,7 @@ package com.careminder.backend.init;
 import com.careminder.backend.implement.account.StaffAuthManager;
 import com.careminder.backend.model.account.Staff;
 import com.careminder.backend.model.account.Ward;
+import com.careminder.backend.model.account.constant.StaffRole;
 import com.careminder.backend.repository.account.StaffRepository;
 import com.careminder.backend.repository.account.WardRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -35,6 +36,7 @@ public class DataInit implements CommandLineRunner {
                 .loginId("1")
                 .password(passwordEncoder.encode("1"))
                 .phoneNumber("010-1234-5678")
+                .staffRole(StaffRole.NURSE)
                 .build();
 
         Staff staff2 = Staff.builder()
@@ -42,10 +44,20 @@ public class DataInit implements CommandLineRunner {
                 .loginId("2")
                 .password(passwordEncoder.encode("1"))
                 .phoneNumber("010-1234-5678")
+                .staffRole(StaffRole.NURSE)
+                .build();
+
+        Staff staff3 = Staff.builder()
+                .name("의사-1")
+                .loginId("3")
+                .password(passwordEncoder.encode("1"))
+                .phoneNumber("010-1234-5678")
+                .staffRole(StaffRole.DOCTOR)
                 .build();
 
         staffRepository.save(staff);
         staffRepository.save(staff2);
+        staffRepository.save(staff3);
 
         Ward ward = Ward.builder()
                 .wardName("병동-1")

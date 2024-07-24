@@ -40,7 +40,7 @@ public class TabletAuthManager implements BaseAuthManager {
     @Transactional
     public JWTResponse createTablet(final CustomUserDetails customUserDetails, final TabletCrateRequest tabletCrateRequest){
         Tablet tablet = tabletRepository.save(tabletCrateRequest.toEntity(customUserDetails.getAccountId()));
-        return jwtUtil.createJWT(tablet.getId(), Role.Tablet);
+        return jwtUtil.createJWT(tablet.getId(), Role.TABLET);
     }
 
     private String passwordEncode(final String password){

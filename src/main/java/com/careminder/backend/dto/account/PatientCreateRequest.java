@@ -3,7 +3,7 @@ package com.careminder.backend.dto.account;
 import com.careminder.backend.model.account.constant.Gender;
 import com.careminder.backend.model.account.Patient;
 
-public record PatientCrateRequest(
+public record PatientCreateRequest(
         String name,
         String phoneNumber,
         Gender gender

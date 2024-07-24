@@ -1,6 +1,6 @@
 const apiPrefix = '/api'; // API prefix
 let stompClient = null;
-let currentRoomId = null;
+let currentPatientRequestId = null;
 let token = localStorage.getItem("token"); // 초기화 시 localStorage에서 토큰 값을 가져옴
 let subscriptions = {};
 
@@ -26,7 +26,8 @@ authAxios.interceptors.request.use(
 );
 
 document.addEventListener('DOMContentLoaded', function () {
-    checkTokenAndLoadChatRooms();
+    checkTokenAndLoadPatientRequests();
+    loadStaffList();
 });
 
 async function setToken(tokenVal) {
@@ -34,7 +35,7 @@ async function setToken(tokenVal) {
     token = tokenVal;
 }
 
-async function checkTokenAndLoadChatRooms() {
+async function checkTokenAndLoadPatientRequests() {
     if (!token) {
         const tokenVal = window.prompt("로그인이 필요합니다.");
         if (tokenVal) {
@@ -50,11 +51,11 @@ async function checkTokenAndLoadChatRooms() {
         const response = await authAxios.get('/auth/info');
         console.log('토큰 정보:', response.data);
         displayUserInfo(response.data);
-        loadChatRooms();
+        await loadPatientRequest();
     } catch (error) {
         console.error('토큰 검증 실패:', error);
         alert('토큰 검증에 실패했습니다. 페이지를 새로고침하고 다시 시도하세요.');
-        // 토큰이 유효하지 않다면, 토큰을 초기화하고 재입력 받도록 할 수 있습니다.
+        // 토큰이 유효하지 않다면, 토큰을 초기화하고 재입력 요청
         localStorage.removeItem("token");
         token = null;
     }
@@ -68,68 +69,95 @@ function displayUserInfo(userInfo) {
     `;
 }
 
-async function createChatRoom() {
-    const roomNameInput = document.getElementById('roomNameInput');
-    const roomName = roomNameInput.value.trim();
+async function createPatientRequest() {
+    const patientRequestInput = document.getElementById('patientRequestInput');
+    const staffSelect = document.getElementById('staffSelect');
+    const requestContent = patientRequestInput.value.trim();
+    const staffId = staffSelect.value;
 
-    if (!roomName) {
-        alert("채팅방 이름을 입력하세요.");
+    if (!isNotNullAndUndefined(requestContent)) {
+        alert("요청을 입력하세요.");
+        return;
+    }
+
+    if (!isNotNullAndUndefined(staffId)) {
+        alert("직원을 선택하세요.");
         return;
     }
 
     try {
-        const response = await authAxios.post('/chat-rooms', { roomName });
-        alert("채팅방이 생성되었습니다.");
-        loadChatRooms(); // 채팅방 목록을 다시 불러옵니다.
+        const patientRequestAppender = {staffId: staffId, content: requestContent}
+        const response = await authAxios.post('/patient-request', patientRequestAppender);
+        alert("요청이 생성되었습니다.");
+        await loadPatientRequest(); // 채팅방 목록을 다시 불러옵니다.
     } catch (error) {
         handleError(error);
     }
 }
 
-async function loadChatRooms() {
+async function loadStaffList() {
+    console.log("호출")
     try {
-        const response = await authAxios.get('/chat-rooms');
-        const chatRooms = response.data.data;
-        displayChatRooms(chatRooms);
+        const response = await authAxios.get('/staff/list');
+        const staffList = response.data.data;
+        console.log(staffList)
+        const staffSelect = document.getElementById('staffSelect');
+
+        staffList.forEach(staff => {
+            const option = document.createElement('option');
+            option.value = staff.staffId;
+            option.textContent = `${staff.name} (${staff.staffRole})`;
+            staffSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading staff list:', error);
+    }
+}
+
+async function loadPatientRequest() {
+    try {
+        const response = await authAxios.get('/patient-request');
+        const patientRequests = response.data.data;
+        await displayPatientRequests(patientRequests);
     } catch (error) {
         console.error('Error:', error);
     }
 }
 
-async function displayChatRooms(chatRooms) {
-    const chatRoomsContainer = document.getElementById('chat-rooms');
-    chatRoomsContainer.innerHTML = '';
+async function displayPatientRequests(patientRequests) {
+    const patientRequestContainer = document.getElementById('patient-requests');
+    patientRequestContainer.innerHTML = '';
 
-    for (const room of chatRooms) {
+    for (const patientRequest of patientRequests) {
         const roomElement = document.createElement('div');
-        roomElement.textContent = room.roomName;
+        roomElement.textContent = patientRequest.content;
 
-        const button = await displayButton(room);
+        const button = await displayButton(patientRequest);
         if (button) {
             roomElement.appendChild(button);
         }
 
         const enterButton = document.createElement('button');
-        enterButton.textContent = 'Enter Room';
-        enterButton.onclick = () => enterChatRoom(room.id);
+        enterButton.textContent = '채팅 입장';
+        enterButton.onclick = () => enterPatientRequest(patientRequest.id);
 
         roomElement.appendChild(enterButton);
-        chatRoomsContainer.appendChild(roomElement);
+        patientRequestContainer.appendChild(roomElement);
     }
 }
 
-async function displayButton(room) {
+async function displayButton(patientRequest) {
     try {
-        const response = await authAxios.get('/check-subscribe', { params: { roomId: room.id } });
+        const response = await authAxios.get('patient-request/check-subscribe', { params: { patientRequestId: patientRequest.id } });
         const isSubscribed = response.data;
         let button = document.createElement('button');
 
         if (isSubscribed) {
-            button.textContent = 'Unsubscribe';
-            button.onclick = (event) => unsubscribeFromRoom(room.id, event);
+            button.textContent = '요청 종료';
+            button.onclick = (event) => unsubscribeFromRoom(patientRequest.id, event);
         } else {
-            button.textContent = 'Subscribe';
-            button.onclick = (event) => subscribeToRoom(room.id, event);
+            button.textContent = '요청 수락';
+            button.onclick = (event) => subscribeToRoom(patientRequest.id, event);
         }
 
         return button;
@@ -139,22 +167,23 @@ async function displayButton(room) {
     }
 }
 
-async function subscribeToRoom(roomId) {
+async function subscribeToRoom(patientRequestId) {
     try {
-        const subscriptionRequest = { roomId };
-        const response = await authAxios.post('/subscribe', subscriptionRequest);
+        const subscriptionRequest = { patientRequestId: patientRequestId };
+        const response = await authAxios.post('patient-request/subscribe', subscriptionRequest);
         alert(response.data);
 
         if (!stompClient) {
             await connectToWebSocket();
         }
 
-        subscriptions[roomId] = stompClient.subscribe(`/topic/chat/${roomId}`, (message) => {
+        subscriptions[patientRequestId] = stompClient.subscribe(`/topic/chat/${patientRequestId}`, (message) => {
             const parsedMessage = JSON.parse(message.body);
-            showMessage(parsedMessage.senderName, parsedMessage.content);
+            console.log(parsedMessage);
+            showMessage(parsedMessage.role, parsedMessage.senderName, parsedMessage.content, parsedMessage.createdAt);
         });
 
-        loadChatRooms();
+        await loadPatientRequest();
     } catch (error) {
         handleError(error);
     }
@@ -163,7 +192,7 @@ async function subscribeToRoom(roomId) {
 async function unsubscribeFromRoom(roomId, event) {
     try {
         const unsubscribeRequest = { roomId };
-        const response = await authAxios.delete('/unsubscribe', { data: unsubscribeRequest });
+        const response = await authAxios.delete('patient-request/unsubscribe', { data: unsubscribeRequest });
         alert(response.data);
 
         if (stompClient) {
@@ -174,25 +203,25 @@ async function unsubscribeFromRoom(roomId, event) {
             }
         }
 
-        loadChatRooms();
+        await loadPatientRequest();
     } catch (error) {
         handleError(error);
     }
 }
 
-async function enterChatRoom(roomId) {
-    currentRoomId = roomId;
+async function enterPatientRequest(patientRequestId) {
+    currentPatientRequestId = patientRequestId;
 
     try {
-        const response = await authAxios.get('/check-subscribe', { params: { roomId } });
+        const response = await authAxios.get('patient-request/check-subscribe', { params: { patientRequestId: patientRequestId } });
         const isSubscribed = response.data;
 
         if (isSubscribed) {
-            document.getElementById('chat-room-container').style.display = 'block';
-            document.getElementById('chat-rooms').style.display = 'none';
+            document.getElementById('patient-request-container').style.display = 'block';
+            document.getElementById('patient-requests').style.display = 'none';
 
             // Fetch chat history
-            const messagesResponse = await authAxios.get(`/chat-history/${roomId}`);
+            const messagesResponse = await authAxios.get(`/chat-history/${patientRequestId}`);
             const messages = messagesResponse.data.data;
 
             // Clear existing messages
@@ -201,7 +230,8 @@ async function enterChatRoom(roomId) {
 
             // Display messages
             messages.forEach(message => {
-                showMessage(message.senderName, message.content);
+                console.log(message);
+                showMessage(message.role, message.senderName, message.content, message.createdAt);
             });
         } else {
             alert("채팅방을 먼저 구독하세요");
@@ -234,29 +264,34 @@ function sendMessage() {
     if (!stompClient) {
         connectToWebSocket()
             .then(() => {
-                stompClient.send(`/app/chat/${currentRoomId}`, {}, JSON.stringify(message));
+                stompClient.send(`/app/chat/${currentPatientRequestId}`, {}, JSON.stringify(message));
                 messageInput.value = '';
             })
             .catch(error => {
                 console.error('Error:', error.response.data.message);
             });
     } else {
-        stompClient.send(`/app/chat/${currentRoomId}`, {}, JSON.stringify(message));
+        stompClient.send(`/app/chat/${currentPatientRequestId}`, {}, JSON.stringify(message));
         messageInput.value = '';
     }
 }
 
-function showMessage(senderName, content) {
+function showMessage(role, senderName, content, createdAt) {
     const messagesContainer = document.getElementById('messages');
     const messageElement = document.createElement('div');
-    messageElement.textContent = `${senderName} : ${content}`;
+    const timeAgoText = timeAgo(createdAt);
+    if(role === "STAFF"){
+        messageElement.textContent = `(직원) ${senderName} : ${content} - ${timeAgoText}`;
+    }else if(role === "TABLET"){
+        messageElement.textContent = `(태블릿) ${senderName} : ${content} - ${timeAgoText}`;
+    }
     messagesContainer.appendChild(messageElement);
 }
 
 function leaveRoom() {
-    currentRoomId = null;
-    document.getElementById('chat-room-container').style.display = 'none';
-    document.getElementById('chat-rooms').style.display = 'block';
+    currentPatientRequestId = null;
+    document.getElementById('patient-request-container').style.display = 'none';
+    document.getElementById('patient-requests').style.display = 'block';
 
     // Clear all messages
     const messagesContainer = document.getElementById('messages');
@@ -274,4 +309,25 @@ function handleError(error) {
         alert(`Error: ${error.message}`);
     }
     console.error('Error:', error);
+}
+
+function isNotNullAndUndefined(value) {
+    return value !== null && value !== undefined;
+}
+
+function timeAgo(createdAt) {
+    const now = new Date();
+    const createdTime = new Date(createdAt);
+    const diffMs = now - createdTime;
+    const diffMins = Math.floor(diffMs / 60000); // 밀리초를 분으로 변환
+
+    if (diffMins < 1){
+        return `방금`;
+    }
+    else if (diffMins < 60) {
+        return `${diffMins}분 전`;
+    } else {
+        const diffHours = Math.floor(diffMins / 60);
+        return `${diffHours}시간 전`;
+    }
 }

@@ -1,13 +1,13 @@
 package com.careminder.backend.service.account;
 
-import com.careminder.backend.dto.account.StaffLoginRequest;
-import com.careminder.backend.dto.account.StaffSignUpRequest;
-import com.careminder.backend.dto.account.WardLoginRequest;
-import com.careminder.backend.dto.account.WardSignUpRequest;
+import com.careminder.backend.dto.account.*;
+import com.careminder.backend.global.response.CollectionApiResponse;
 import com.careminder.backend.global.response.JWTResponse;
 import com.careminder.backend.implement.account.StaffAuthManager;
 import com.careminder.backend.implement.account.WardAuthManager;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class StaffAuthService {
@@ -27,6 +27,11 @@ public class StaffAuthService {
     }
 
     public void signUp(final StaffSignUpRequest staffSignUpRequest){
+//        todo: loginId 겹치면 회원가입 불가능하도록 핸들링 
         staffAuthManager.signUp(staffSignUpRequest);
+    }
+
+    public List<StaffInfoResponse> getAllStaff() {
+        return staffAuthManager.getAllStaff();
     }
 }
