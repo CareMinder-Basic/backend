@@ -1,6 +1,6 @@
 package com.careminder.backend.repository.chat.subscription;
 
-import com.careminder.backend.model.chat.Subscription;
+import com.careminder.backend.model.chat.subscription.Subscription;
 import org.springframework.stereotype.Repository;
 
 @Repository

@@ -1,8 +1,7 @@
 package com.careminder.backend.implement.chat.subscription;
 
 import com.careminder.backend.global.annotation.Implement;
-import com.careminder.backend.implement.account.AuthManagerFactory;
-import com.careminder.backend.model.chat.Subscription;
+import com.careminder.backend.model.chat.subscription.Subscription;
 import com.careminder.backend.repository.chat.subscription.SubscriptionRepository;
 
 @Implement

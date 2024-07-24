@@ -1,6 +1,6 @@
 package com.careminder.backend.dto.account;
 
-import com.careminder.backend.model.account.Role;
+import com.careminder.backend.model.account.constant.Role;
 import lombok.Builder;
 
 @Builder

@@ -1,7 +1,7 @@
-package com.careminder.backend.model.chat;
+package com.careminder.backend.model.chat.subscription;
 
 import com.careminder.backend.global.annotation.Association;
-import com.careminder.backend.model.account.Role;
+import com.careminder.backend.model.account.constant.Role;
 import jakarta.persistence.*;
 import lombok.Builder;
 
@@ -9,6 +9,7 @@ import lombok.Builder;
 public class Subscription {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "subscription_id")
     private Long id;
     @Association(description = "환자 요청 id, 채팅이 이뤄지고 있는 roomId 역할")
     private Long patientRequestId;

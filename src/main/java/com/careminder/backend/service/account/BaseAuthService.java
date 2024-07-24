@@ -4,8 +4,7 @@ import com.careminder.backend.dto.account.CurrentUserResponse;
 import com.careminder.backend.global.auth.CustomUserDetails;
 import com.careminder.backend.implement.account.AuthManagerFactory;
 import com.careminder.backend.implement.account.BaseAuthManager;
-import com.careminder.backend.model.account.Role;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.careminder.backend.model.account.constant.Role;
 import org.springframework.stereotype.Service;
 
 @Service

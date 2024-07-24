@@ -1,6 +1,6 @@
 package com.careminder.backend.repository.chat.chat_message;
 
-import com.careminder.backend.model.chat.ChatMessage;
+import com.careminder.backend.model.chat.chat_message.ChatMessage;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class ChatMessageRepository {
         chatMessageJpaRepository.save(chatMessage);
     }
 
-    public List<ChatMessage> getAllByRoomId(final long patientRequestId){
+    public List<ChatMessage> getAllByPatientRequestId(final long patientRequestId){
         return chatMessageJpaRepository.getAllByPatientRequestId(patientRequestId);
     }
 }

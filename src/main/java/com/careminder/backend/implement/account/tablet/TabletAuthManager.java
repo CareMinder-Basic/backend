@@ -6,7 +6,7 @@ import com.careminder.backend.global.auth.CustomUserDetails;
 import com.careminder.backend.global.auth.JWTUtil;
 import com.careminder.backend.global.response.JWTResponse;
 import com.careminder.backend.implement.account.BaseAuthManager;
-import com.careminder.backend.model.account.Role;
+import com.careminder.backend.model.account.constant.Role;
 import com.careminder.backend.model.account.Tablet;
 import com.careminder.backend.repository.account.TabletRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

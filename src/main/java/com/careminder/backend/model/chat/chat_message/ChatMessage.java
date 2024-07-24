@@ -1,8 +1,8 @@
-package com.careminder.backend.model.chat;
+package com.careminder.backend.model.chat.chat_message;
 
 import com.careminder.backend.global.annotation.Association;
 import com.careminder.backend.global.base_entity.CreatedTimeEntity;
-import com.careminder.backend.model.account.Role;
+import com.careminder.backend.model.account.constant.Role;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;

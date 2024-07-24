@@ -1,6 +1,6 @@
 package com.careminder.backend.dto.chat.chat_message;
 
-import com.careminder.backend.model.chat.ChatMessage;
+import com.careminder.backend.model.chat.chat_message.ChatMessage;
 import lombok.Builder;
 
 @Builder

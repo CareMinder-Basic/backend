@@ -1,7 +1,7 @@
 package com.careminder.backend.dto.chat.subscription;
 
 import com.careminder.backend.global.auth.CustomUserDetails;
-import com.careminder.backend.model.chat.Subscription;
+import com.careminder.backend.model.chat.subscription.Subscription;
 
 public record SubscriptionRequest(
         Long patientRequestId

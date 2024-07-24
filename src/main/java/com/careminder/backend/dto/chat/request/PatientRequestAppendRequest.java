@@ -1,8 +1,7 @@
-package com.careminder.backend.dto.request;
+package com.careminder.backend.dto.chat.request;
 
-import com.careminder.backend.model.account.Patient;
-import com.careminder.backend.model.request.PatientRequest;
-import com.careminder.backend.model.request.RequestStatus;
+import com.careminder.backend.model.chat.request.PatientRequest;
+import com.careminder.backend.model.chat.request.RequestStatus;
 
 public record PatientRequestAppendRequest(
     Long staffId,

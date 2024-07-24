@@ -1,9 +1,8 @@
 package com.careminder.backend.dto.chat.chat_message;
 
 import com.careminder.backend.global.auth.CustomUserDetails;
-import com.careminder.backend.model.account.Role;
-import com.careminder.backend.model.chat.ChatMessage;
-import com.careminder.backend.model.chat.MessageType;
+import com.careminder.backend.model.chat.chat_message.ChatMessage;
+import com.careminder.backend.model.chat.chat_message.MessageType;
 
 public record ChatMessageRequest(
         long patientRequestId,

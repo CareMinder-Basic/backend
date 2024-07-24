@@ -1,7 +1,7 @@
-package com.careminder.backend.service.request;
+package com.careminder.backend.service.chat.request;
 
-import com.careminder.backend.dto.request.PatientRequestAppendRequest;
-import com.careminder.backend.implement.request.PatientRequestManager;
+import com.careminder.backend.dto.chat.request.PatientRequestAppendRequest;
+import com.careminder.backend.implement.chat.request.PatientRequestManager;
 import org.springframework.stereotype.Service;
 
 @Service

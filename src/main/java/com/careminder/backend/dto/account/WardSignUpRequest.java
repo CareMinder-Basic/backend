@@ -1,9 +1,7 @@
 package com.careminder.backend.dto.account;
 
-import com.careminder.backend.model.account.Role;
 import com.careminder.backend.model.account.Ward;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 
 @Builder

@@ -1,6 +1,6 @@
 package com.careminder.backend.implement.account;
 
-import com.careminder.backend.model.account.Role;
+import com.careminder.backend.model.account.constant.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;

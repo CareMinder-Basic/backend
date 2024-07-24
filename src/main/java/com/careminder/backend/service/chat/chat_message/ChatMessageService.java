@@ -5,7 +5,7 @@ import com.careminder.backend.dto.chat.chat_message.SimpleChatMessageResponse;
 import com.careminder.backend.global.auth.CustomUserDetails;
 import com.careminder.backend.implement.account.AuthManagerFactory;
 import com.careminder.backend.implement.chat.chat_message.ChatMessageManager;
-import com.careminder.backend.model.chat.ChatMessage;
+import com.careminder.backend.model.chat.chat_message.ChatMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +29,7 @@ public class ChatMessageService {
     }
 
     @Transactional(readOnly = true)
-    public List<SimpleChatMessageResponse> getAllByRoomId(final long roomId) {
-        return chatMessageManager.getAllByRoomId(roomId).stream().map(SimpleChatMessageResponse::from).toList();
+    public List<SimpleChatMessageResponse> getAllByPatientRequestId(final long roomId) {
+        return chatMessageManager.getAllByPatientRequestId(roomId).stream().map(SimpleChatMessageResponse::from).toList();
     }
 }

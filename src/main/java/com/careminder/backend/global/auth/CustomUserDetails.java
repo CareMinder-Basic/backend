@@ -1,6 +1,6 @@
 package com.careminder.backend.global.auth;
 
-import com.careminder.backend.model.account.Role;
+import com.careminder.backend.model.account.constant.Role;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

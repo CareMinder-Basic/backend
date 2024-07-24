@@ -1,12 +1,12 @@
-package com.careminder.backend.controller.request;
+package com.careminder.backend.controller.chat.request;
 
 import com.careminder.backend.dto.chat.subscription.SubscriptionRequest;
 import com.careminder.backend.dto.chat.subscription.UnsubscribeRequest;
-import com.careminder.backend.dto.request.PatientRequestAppendRequest;
+import com.careminder.backend.dto.chat.request.PatientRequestAppendRequest;
 import com.careminder.backend.global.annotation.CurrentUser;
 import com.careminder.backend.global.auth.CustomUserDetails;
 import com.careminder.backend.service.chat.subscription.SubscriptionService;
-import com.careminder.backend.service.request.PatientRequestService;
+import com.careminder.backend.service.chat.request.PatientRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

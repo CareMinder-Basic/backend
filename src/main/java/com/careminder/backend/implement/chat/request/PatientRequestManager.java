@@ -1,9 +1,9 @@
-package com.careminder.backend.implement.request;
+package com.careminder.backend.implement.chat.request;
 
-import com.careminder.backend.dto.request.PatientRequestResponse;
+import com.careminder.backend.dto.chat.request.PatientRequestResponse;
 import com.careminder.backend.global.annotation.Implement;
-import com.careminder.backend.model.request.PatientRequest;
-import com.careminder.backend.repository.request.PatientRequestRepository;
+import com.careminder.backend.model.chat.request.PatientRequest;
+import com.careminder.backend.repository.chat.request.PatientRequestRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

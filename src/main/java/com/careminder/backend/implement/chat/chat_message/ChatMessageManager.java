@@ -5,8 +5,8 @@ import com.careminder.backend.global.annotation.Implement;
 import com.careminder.backend.global.auth.CustomUserDetails;
 import com.careminder.backend.implement.account.AuthManagerFactory;
 import com.careminder.backend.implement.account.BaseAuthManager;
-import com.careminder.backend.model.account.Role;
-import com.careminder.backend.model.chat.ChatMessage;
+import com.careminder.backend.model.account.constant.Role;
+import com.careminder.backend.model.chat.chat_message.ChatMessage;
 import com.careminder.backend.repository.chat.chat_message.ChatMessageRepository;
 
 import java.util.List;
@@ -30,8 +30,8 @@ public class ChatMessageManager {
         return chatMessage;
     }
 
-    public List<ChatMessage> getAllByRoomId(final long roomId){
-        return chatMessageRepository.getAllByRoomId(roomId);
+    public List<ChatMessage> getAllByPatientRequestId(final long roomId){
+        return chatMessageRepository.getAllByPatientRequestId(roomId);
     }
 
     private String getSenderName(final CustomUserDetails customUserDetails){

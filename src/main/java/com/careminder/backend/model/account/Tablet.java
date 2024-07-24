@@ -1,17 +1,16 @@
 package com.careminder.backend.model.account;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.stereotype.Component;
 
 @Entity
 @Getter
 public class Tablet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "tablet_id")
     private Long id;
 
     private String tabletName;

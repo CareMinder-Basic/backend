@@ -8,7 +8,9 @@ import lombok.Getter;
 @Getter
 public class Ward {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ward_id")
     private Long id;
 
     /** 병동의 이름 */

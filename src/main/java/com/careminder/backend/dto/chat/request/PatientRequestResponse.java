@@ -1,6 +1,6 @@
-package com.careminder.backend.dto.request;
+package com.careminder.backend.dto.chat.request;
 
-import com.careminder.backend.model.request.RequestStatus;
+import com.careminder.backend.model.chat.request.RequestStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.querydsl.core.annotations.QueryProjection;
 

@@ -1,14 +1,12 @@
 package com.careminder.backend.model.hospital;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Hospital {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hospital_id")
     private Long id;
 
     /** 병원의 이름 */

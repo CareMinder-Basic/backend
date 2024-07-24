@@ -1,5 +1,6 @@
 package com.careminder.backend.model.account;
 
+import com.careminder.backend.model.account.constant.StaffRole;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,7 @@ public class Staff {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "staff_id")
     private Long id;
 
     /** 직원의 이름 */

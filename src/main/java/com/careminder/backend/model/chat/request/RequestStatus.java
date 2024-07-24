@@ -1,4 +1,4 @@
-package com.careminder.backend.model.request;
+package com.careminder.backend.model.chat.request;
 
 public enum RequestStatus {
     PENDING,

@@ -6,7 +6,7 @@ import com.careminder.backend.global.annotation.Implement;
 import com.careminder.backend.global.auth.JWTUtil;
 import com.careminder.backend.global.error.exception.InvalidCredentialsException;
 import com.careminder.backend.global.response.JWTResponse;
-import com.careminder.backend.model.account.Role;
+import com.careminder.backend.model.account.constant.Role;
 import com.careminder.backend.model.account.Staff;
 import com.careminder.backend.repository.account.StaffRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
